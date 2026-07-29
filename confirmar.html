@@ -14,6 +14,8 @@
     rel="stylesheet"
   >
 
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
   <style>
     :root {
       --rosa-escuro: #7b1e4f;
@@ -41,21 +43,17 @@
     body {
       min-height: 100vh;
       padding: 30px 15px;
-
       display: flex;
       align-items: center;
       justify-content: center;
-
       font-family: "Montserrat", sans-serif;
       color: var(--texto);
-
       background: linear-gradient(
         135deg,
         #f5ebe6 0%,
         #ebd4df 50%,
         #dfb8ca 100%
       );
-
       background-attachment: fixed;
     }
 
@@ -69,16 +67,12 @@
       position: relative;
       isolation: isolate;
       overflow: hidden;
-
       width: 100%;
       padding: 58px 38px 40px;
-
       text-align: center;
       background: var(--papel);
-
       border: 1px solid rgba(123, 30, 79, 0.18);
       border-radius: 180px 180px 24px 24px;
-
       box-shadow: 0 25px 50px rgba(74, 28, 49, 0.15);
     }
 
@@ -87,10 +81,8 @@
       position: absolute;
       inset: 11px;
       z-index: -1;
-
       border: 1px solid rgba(123, 30, 79, 0.22);
       border-radius: 170px 170px 16px 16px;
-
       pointer-events: none;
     }
 
@@ -103,10 +95,8 @@
       display: flex;
       align-items: center;
       justify-content: center;
-
       gap: 12px;
       margin-bottom: 18px;
-
       color: var(--rosa-medio);
     }
 
@@ -122,9 +112,7 @@
     h1 {
       max-width: 420px;
       margin: 0 auto;
-
       color: var(--rosa-escuro);
-
       font-family: "Cormorant Garamond", serif;
       font-size: clamp(2.5rem, 9vw, 3.8rem);
       font-weight: 700;
@@ -134,9 +122,7 @@
     .descricao {
       max-width: 360px;
       margin: 14px auto 30px;
-
       color: var(--texto);
-
       font-size: 0.82rem;
       line-height: 1.7;
     }
@@ -150,9 +136,7 @@
     .pergunta {
       display: block;
       margin-bottom: 8px;
-
       color: var(--rosa-profundo);
-
       font-size: 0.71rem;
       font-weight: 600;
       letter-spacing: 0.08em;
@@ -163,18 +147,13 @@
       width: 100%;
       min-height: 50px;
       padding: 13px 14px;
-
       color: var(--texto);
       background: #ffffff;
-
       border: 1px solid rgba(123, 30, 79, 0.25);
       border-radius: 8px;
-
       outline: none;
-
       font-family: "Montserrat", sans-serif;
       font-size: 0.88rem;
-
       transition: all 0.2s ease;
     }
 
@@ -204,22 +183,17 @@
       display: flex;
       align-items: center;
       justify-content: center;
-
       width: 100%;
       min-height: 56px;
       padding: 12px 10px;
-
       color: var(--rosa-escuro);
       background: transparent;
-
       border: 1px solid rgba(123, 30, 79, 0.35);
       border-radius: 8px;
-
       font-size: 0.72rem;
       font-weight: 600;
       line-height: 1.4;
       text-align: center;
-
       cursor: pointer;
       transition: all 0.2s ease;
     }
@@ -232,9 +206,7 @@
     .opcao input:checked + label {
       color: var(--branco);
       background: var(--rosa-escuro);
-
       border-color: var(--rosa-escuro);
-
       box-shadow: 0 4px 10px rgba(123, 30, 79, 0.2);
     }
 
@@ -243,20 +215,16 @@
       display: flex;
       align-items: center;
       justify-content: center;
-
       width: 100%;
       min-height: 50px;
       padding: 13px 20px;
-
       border-radius: 50px;
-
       font-family: "Montserrat", sans-serif;
       font-size: 0.73rem;
       font-weight: 600;
       letter-spacing: 0.1em;
       text-decoration: none;
       text-transform: uppercase;
-
       cursor: pointer;
       transition: all 0.3s ease;
     }
@@ -264,31 +232,19 @@
     .botao-enviar {
       color: var(--branco);
       background: var(--rosa-escuro);
-
       border: 1px solid var(--rosa-escuro);
-
       box-shadow: 0 4px 12px rgba(123, 30, 79, 0.25);
     }
 
-    .botao-enviar:hover {
-      background: var(--rosa-profundo);
-      transform: translateY(-2px);
-
-      box-shadow: 0 6px 16px rgba(123, 30, 79, 0.35);
-    }
-
     .botao-enviar:disabled {
-      opacity: 0.7;
+      opacity: 0.65;
       cursor: wait;
-      transform: none;
     }
 
     .botao-voltar {
       margin-top: 11px;
-
       color: var(--rosa-escuro);
       background: transparent;
-
       border: 1px solid rgba(123, 30, 79, 0.4);
     }
 
@@ -296,9 +252,7 @@
       display: none;
       margin-top: 18px;
       padding: 15px;
-
       border-radius: 8px;
-
       font-size: 0.8rem;
       font-weight: 500;
       line-height: 1.6;
@@ -307,10 +261,8 @@
 
     .mensagem.erro {
       display: block;
-
       color: #8b1f42;
       background: rgba(255, 226, 233, 0.85);
-
       border: 1px solid rgba(139, 31, 66, 0.3);
     }
 
@@ -329,13 +281,8 @@
         border-radius: 150px 150px 12px 12px;
       }
 
-      h1 {
-        font-size: clamp(2.2rem, 11vw, 3rem);
-      }
-
       .opcoes {
         grid-template-columns: 1fr;
-        gap: 8px;
       }
     }
   </style>
@@ -345,7 +292,6 @@
   <main class="pagina-confirmacao">
     <section class="cartao-confirmacao">
       <div class="conteudo">
-
         <div class="estrelas" aria-hidden="true">
           <span class="estrela-pequena">✦</span>
           <span class="estrela-grande">✷</span>
@@ -359,16 +305,12 @@
         </p>
 
         <form id="formConfirmacao">
-
           <div class="campo">
-            <label for="nomeConvidado">
-              Seu nome completo
-            </label>
+            <label for="nomeConvidado">Seu nome completo</label>
 
             <input
               type="text"
               id="nomeConvidado"
-              name="nomeConvidado"
               maxlength="100"
               placeholder="Digite seu nome"
               autocomplete="name"
@@ -377,9 +319,7 @@
           </div>
 
           <div class="campo">
-            <span class="pergunta">
-              Você irá ao aniversário?
-            </span>
+            <span class="pergunta">Você irá ao aniversário?</span>
 
             <div class="opcoes">
               <div class="opcao">
@@ -390,10 +330,7 @@
                   value="sim"
                   required
                 >
-
-                <label for="presencaSim">
-                  Sim, estarei presente
-                </label>
+                <label for="presencaSim">Sim, estarei presente</label>
               </div>
 
               <div class="opcao">
@@ -404,10 +341,7 @@
                   value="nao"
                   required
                 >
-
-                <label for="presencaNao">
-                  Não poderei comparecer
-                </label>
+                <label for="presencaNao">Não poderei comparecer</label>
               </div>
             </div>
           </div>
@@ -415,14 +349,12 @@
           <button
             type="submit"
             class="botao-enviar"
+            id="botaoEnviar"
           >
             Enviar confirmação
           </button>
 
-          <a
-            href="index.html"
-            class="botao-voltar"
-          >
+          <a href="index.html" class="botao-voltar">
             Voltar para o convite
           </a>
 
@@ -431,63 +363,134 @@
             class="mensagem"
             aria-live="polite"
           ></p>
-
         </form>
       </div>
     </section>
   </main>
 
   <script>
-    const formulario = document.getElementById("formConfirmacao");
-    const mensagem = document.getElementById("mensagemConfirmacao");
-    const botaoEnviar = formulario.querySelector(".botao-enviar");
+    /*
+      SUBSTITUA APENAS OS DOIS VALORES ABAIXO.
+      Use a Project URL e a Publishable key do Supabase.
+    */
+    const SUPABASE_URL =
+      "https://ywkgwctaaipwcyohomdj.supabase.co";
 
-    formulario.addEventListener("submit", function (evento) {
-      evento.preventDefault();
+    const SUPABASE_KEY =
+      "sb_publishable_zLcSs35Cps1zW0ncBW5qxw_zv-c3Ekt";
 
+    const mensagem =
+      document.getElementById("mensagemConfirmacao");
+
+    const formulario =
+      document.getElementById("formConfirmacao");
+
+    const botaoEnviar =
+      document.getElementById("botaoEnviar");
+
+    let clienteSupabase = null;
+
+    try {
+      clienteSupabase = window.supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_KEY
+      );
+    } catch (erro) {
+      console.error("Erro ao criar cliente Supabase:", erro);
+    }
+
+    formulario.addEventListener(
+      "submit",
+      async function (evento) {
+        evento.preventDefault();
+
+        limparMensagem();
+
+        const nome = document
+          .getElementById("nomeConvidado")
+          .value
+          .trim();
+
+        const presencaSelecionada =
+          document.querySelector(
+            'input[name="presenca"]:checked'
+          );
+
+        if (nome.length < 2) {
+          mostrarErro("Digite seu nome para continuar.");
+          return;
+        }
+
+        if (!presencaSelecionada) {
+          mostrarErro(
+            "Informe se você irá ao aniversário."
+          );
+          return;
+        }
+
+        if (
+          SUPABASE_URL.includes("COLE_AQUI") ||
+          SUPABASE_KEY.includes("COLE_AQUI")
+        ) {
+          mostrarErro(
+            "O Supabase ainda não foi configurado neste arquivo."
+          );
+          return;
+        }
+
+        if (!clienteSupabase) {
+          mostrarErro(
+            "Não foi possível conectar ao Supabase."
+          );
+          return;
+        }
+
+        botaoEnviar.disabled = true;
+        botaoEnviar.textContent = "Salvando confirmação...";
+
+        const presenca = presencaSelecionada.value;
+
+        try {
+          const { error } = await clienteSupabase
+            .from("confirmacoes")
+            .insert({
+              nome: nome,
+              presenca: presenca
+            });
+
+          if (error) {
+            throw error;
+          }
+
+          const parametros = new URLSearchParams({
+            nome: nome,
+            resposta: presenca
+          });
+
+          window.location.href =
+            `confirmacao.html?${parametros.toString()}`;
+        } catch (erro) {
+          console.error("Erro completo do Supabase:", erro);
+
+          mostrarErro(
+            "Não foi possível salvar. Detalhe: " +
+            (erro.message || "erro desconhecido")
+          );
+
+          botaoEnviar.disabled = false;
+          botaoEnviar.textContent = "Enviar confirmação";
+        }
+      }
+    );
+
+    function mostrarErro(texto) {
+      mensagem.textContent = texto;
+      mensagem.className = "mensagem erro";
+    }
+
+    function limparMensagem() {
       mensagem.textContent = "";
       mensagem.className = "mensagem";
-
-      const nome = document
-        .getElementById("nomeConvidado")
-        .value
-        .trim();
-
-      const presencaSelecionada = document.querySelector(
-        'input[name="presenca"]:checked'
-      );
-
-      if (nome.length < 2) {
-        exibirMensagem(
-          "Digite seu nome para continuar.",
-          "erro"
-        );
-        return;
-      }
-
-      if (!presencaSelecionada) {
-        exibirMensagem(
-          "Informe se você irá ao aniversário.",
-          "erro"
-        );
-        return;
-      }
-
-      botaoEnviar.disabled = true;
-      botaoEnviar.textContent = "Abrindo confirmação...";
-
-      const parametros = new URLSearchParams({
-        nome: nome,
-        resposta: presencaSelecionada.value
-      });
-
-      window.location.href =
-        `confirmacao.html?${parametros.toString()}`;
-    });
-
-    function exibirMensagem(texto, tipo) {
-      mensagem.textContent = texto;
-      mensagem.className = `mensagem ${tipo}`;
     }
   </script>
 </body>
