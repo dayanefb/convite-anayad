@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+ <head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width,initial-scale=1" name="viewport"/>
+  <title>
+   Op&ccedil;&otilde;es de presentes - Anayad
+  </title>
+  <link href="https://fonts.googleapis.com" rel="preconnect"/>
+  <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&amp;family=Montserrat:wght@300;400;500;600&amp;display=swap" rel="stylesheet"/>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2">
+  </script>
+  <style>
+   :root {
+  --r:#7b1e4f;
+  --rm:#a84373;
+  --rc:#f3e2eb;
+  --p:#fdfbf7;
+  --t:#4a1c31;
+  --ts:#7c5367;
+}
+
+* {
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+}
+
+body {
+  min-height:100vh;
+  padding:26px 14px 38px;
+  font-family:Montserrat,sans-serif;
+  color:var(--t);
+  background:linear-gradient(135deg,#f6ece8,#ecd8e1 48%,#dfbdcd);
+  background-attachment:fixed;
+}
+
+.page {
+  max-width:1180px;
+  margin:auto;
+}
+
+.head {
+  position:relative;
+  margin-bottom:24px;
+  padding:48px 24px 34px;
+  text-align:center;
+  background:#fdfbf7f5;
+  border:1px solid #7b1e4f29;
+  border-radius:150px 150px 24px 24px;
+  box-shadow:0 18px 42px #4a1c311c;
+}
+
+.stars {
+  margin-bottom:13px;
+  color:var(--rm);
+  font-size:1.25rem;
+  letter-spacing:10px;
+}
+
+h1,h2 {
+  font-family:"Cormorant Garamond",serif;
+  color:var(--r);
+}
+
+h1 {
+  font-size:clamp(2.7rem,8vw,4.6rem);
+  line-height:.95;
+}
+
+.sub {
+  max-width:620px;
+  margin:15px auto 0;
+  color:var(--ts);
+  font-size:.8rem;
+  line-height:1.8;
+}
+
+.grid {
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:18px;
+}
+
+.gift {
+  overflow:hidden;
+  background:#fdfbf7f7;
+  border:1px solid #7b1e4f24;
+  border-radius:18px;
+  box-shadow:0 12px 28px #4a1c3117;
+}
+
+.gift img {
+  width:100%;
+  aspect-ratio:4/3;
+  display:block;
+  object-fit:cover;
+  background:var(--rc);
+}
+
+.body {
+  padding:20px;
+}
+
+h2 {
+  font-size:1.7rem;
+}
+
+.desc {
+  min-height:58px;
+  margin-top:10px;
+  color:var(--ts);
+  font-size:.73rem;
+  line-height:1.7;
+}
+
+.buy,.back {
+  min-height:46px;
+  padding:12px 16px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  border-radius:999px;
+  font-size:.67rem;
+  font-weight:600;
+  letter-spacing:.08em;
+  text-decoration:none;
+  text-transform:uppercase;
+}
+
+.buy {
+  width:100%;
+  margin-top:17px;
+  color:#fff;
+  background:var(--r);
+}
+
+.back {
+  color:var(--r);
+  background:#fdfbf7db;
+  border:1px solid #7b1e4f4c;
+}
+
+.actions {
+  margin-top:24px;
+  text-align:center;
+}
+
+.state {
+  padding:50px 20px;
+  text-align:center;
+  color:var(--ts);
+  background:#fdfbf7db;
+  border-radius:18px;
+  font-size:.78rem;
+}
+
+@media(max-width:900px) {
+  .grid {
+    grid-template-columns:repeat(2,minmax(0,1fr));
+  }
+
+}
+
+@media(max-width:580px) {
+  body {
+    padding:10px;
+  }
+
+  .head {
+    padding:44px 18px 28px;
+    border-radius:130px 130px 20px 20px;
+  }
+
+  .grid {
+    grid-template-columns:1fr;
+  }
+
+}
+  </style>
+ </head>
+ <body>
+  <main class="page">
+   <section class="head">
+    <div class="stars">
+     ✦ ✷ ✦
+    </div>
+    <h1>
+     Op&ccedil;&otilde;es de presentes
+    </h1>
+    <p class="sub">
+     Sua presen&ccedil;a j&aacute; &eacute; muito especial. Mas, caso queira me presentear, separei algumas op&ccedil;&otilde;es com carinho.
+    </p>
+   </section>
+   <section class="grid" id="grid">
+   </section>
+   <div class="state" id="state">
+    Carregando presentes...
+   </div>
+   <div class="actions">
+    <a class="back" href="index.html">
+     Voltar ao convite
+    </a>
+   </div>
+  </main>
+  <script>
+   /*
+============================================================
+PÁGINA PÚBLICA DE PRESENTES
+============================================================
+1. CONFIGURAÇÃO DO SUPABASE
+2. CARREGAMENTO DOS PRESENTES VISÍVEIS
+3. CRIAÇÃO DOS CARTÕES NA TELA
+============================================================
+*/
+
+const SUPABASE_URL =
+      "https://ywkgwctaaipwcyohomdj.supabase.co";
+
+const SUPABASE_KEY =
+    "sb_publishable_zLcSs35Cps1zW0ncBW5qxw_zv-c3Ekt";
+const sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+load();
+async function load(){
+  const state=document.getElementById("state"),grid=document.getElementById("grid");
+  if(SUPABASE_URL.includes("COLE_AQUI")||SUPABASE_KEY.includes("COLE_AQUI")){state.textContent="A página ainda não foi conectada ao Supabase.";
+    return}
+    const {data,error}=await sb.from("presentes").select("id,nome,descricao,imagem_url,link_compra,ordem").eq("ativo",true).order("ordem",{ascending:true}).order("criado_em",{ascending:false});
+    if(error){state.textContent="Não foi possível carregar os presentes.";
+      console.error(error);
+      return}
+      if(!data||!data.length){state.textContent="As opções serão adicionadas em breve.";
+        return}
+        state.style.display="none";
+        data.forEach(g=>{
+          const card=document.createElement("article");
+          card.className="gift";
+          const img=document.createElement("img");
+          img.src=g.imagem_url;
+          img.alt=g.nome;
+          img.loading="lazy";
+          const body=document.createElement("div");
+          body.className="body";
+          const h=document.createElement("h2");
+          h.textContent=g.nome;
+          const p=document.createElement("p");
+          p.className="desc";
+          p.textContent=g.descricao||"Uma opção escolhida com carinho.";
+          const a=document.createElement("a");
+          a.className="buy";
+          a.href=g.link_compra;
+          a.target="_blank";
+          a.rel="noopener noreferrer";
+          a.textContent="Ver onde comprar";
+          body.append(h,p,a);
+          card.append(img,body);
+          grid.append(card);
+        });
+      }
+  </script>
+ </body>
+</html>

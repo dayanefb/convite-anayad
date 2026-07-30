@@ -1,0 +1,1004 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Administrar mural - Anayad</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Montserrat:wght@300;400;500;600&display=swap"
+    rel="stylesheet"
+  >
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <style>
+    :root {
+      --vinho: #7b1e4f;
+      --vinho-escuro: #5d1239;
+      --rosa-claro: #f3e2eb;
+      --creme: #fdfbf7;
+      --texto: #4a1c31;
+      --texto-suave: #7c5367;
+      --verde: #2f7d62;
+      --erro: #a13c5d;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      min-height: 100vh;
+      padding: 22px;
+
+      font-family: "Montserrat", sans-serif;
+      color: var(--texto);
+
+      background:
+        linear-gradient(
+          135deg,
+          #f7eee9,
+          #ecd8e1 50%,
+          #dfbdcd
+        );
+    }
+
+    button,
+    input {
+      font: inherit;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    .oculto {
+      display: none !important;
+    }
+
+    .login {
+      min-height: calc(100vh - 44px);
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .login-card {
+      width: 100%;
+      max-width: 460px;
+      padding: 52px 34px 38px;
+
+      text-align: center;
+      background: var(--creme);
+
+      border: 1px solid rgba(123, 30, 79, 0.16);
+      border-radius: 170px 170px 24px 24px;
+    }
+
+    h1,
+    h2,
+    h3 {
+      color: var(--vinho);
+
+      font-family: "Cormorant Garamond", serif;
+    }
+
+    h1 {
+      font-size: clamp(2.5rem, 8vw, 4rem);
+      line-height: 0.95;
+    }
+
+    h2 {
+      font-size: 2rem;
+    }
+
+    .subtitulo {
+      margin: 14px auto 24px;
+
+      color: var(--texto-suave);
+
+      font-size: 0.75rem;
+      line-height: 1.7;
+    }
+
+    .campo {
+      margin-top: 14px;
+      text-align: left;
+    }
+
+    .campo label {
+      display: block;
+      margin-bottom: 7px;
+
+      color: var(--vinho-escuro);
+
+      font-size: 0.67rem;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+
+    .campo input {
+      width: 100%;
+      min-height: 48px;
+      padding: 12px;
+
+      border: 1px solid rgba(123, 30, 79, 0.22);
+      border-radius: 9px;
+    }
+
+    .botao {
+      min-height: 46px;
+      padding: 11px 17px;
+
+      border-radius: 999px;
+
+      font-size: 0.65rem;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+
+    .principal {
+      width: 100%;
+      margin-top: 16px;
+
+      color: #ffffff;
+      background: var(--vinho);
+
+      border: 1px solid var(--vinho);
+    }
+
+    .secundario {
+      color: var(--vinho);
+      background: transparent;
+
+      border: 1px solid rgba(123, 30, 79, 0.3);
+    }
+
+    .perigo {
+      color: var(--erro);
+      background: transparent;
+
+      border: 1px solid rgba(161, 60, 93, 0.35);
+    }
+
+    .app {
+      width: 100%;
+      max-width: 1180px;
+      margin: 0 auto;
+    }
+
+    .cabecalho {
+      margin-bottom: 18px;
+      padding: 22px 24px;
+
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+
+      background: rgba(253, 251, 247, 0.96);
+
+      border: 1px solid rgba(123, 30, 79, 0.16);
+      border-radius: 22px;
+    }
+
+    .acoes {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .grade {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .foto {
+      overflow: hidden;
+
+      background: rgba(253, 251, 247, 0.97);
+
+      border: 1px solid rgba(123, 30, 79, 0.14);
+      border-radius: 16px;
+    }
+
+    .foto img {
+      width: 100%;
+      aspect-ratio: 4 / 3;
+
+      display: block;
+      object-fit: cover;
+
+      background: var(--rosa-claro);
+    }
+
+    .conteudo {
+      padding: 16px;
+    }
+
+    .conteudo h3 {
+      font-size: 1.4rem;
+    }
+
+    .conteudo p {
+      min-height: 42px;
+      margin-top: 7px;
+
+      color: var(--texto-suave);
+
+      font-size: 0.67rem;
+      line-height: 1.55;
+    }
+
+    .status {
+      display: inline-flex;
+      margin-top: 10px;
+      padding: 6px 9px;
+
+      border-radius: 999px;
+
+      font-size: 0.56rem;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+
+    .status-aprovado {
+      color: var(--verde);
+      background: rgba(47, 125, 98, 0.1);
+    }
+
+    .status-pendente {
+      color: var(--vinho);
+      background: var(--rosa-claro);
+    }
+
+    .acoes-foto {
+      margin-top: 13px;
+
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 7px;
+    }
+
+    .mensagem {
+      display: none;
+      margin: 14px 0;
+      padding: 13px;
+
+      border-radius: 9px;
+
+      font-size: 0.72rem;
+    }
+
+    .mensagem.erro {
+      display: block;
+
+      color: var(--erro);
+      background: #ffe4ec;
+    }
+
+    .mensagem.sucesso {
+      display: block;
+
+      color: var(--verde);
+      background: #e9f6f1;
+    }
+
+    .vazio {
+      padding: 50px 20px;
+
+      color: var(--texto-suave);
+
+      text-align: center;
+    }
+
+    @media (max-width: 900px) {
+      .grade {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 600px) {
+      body {
+        padding: 10px;
+      }
+
+      .grade {
+        grid-template-columns: 1fr;
+      }
+
+      .cabecalho {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+    }
+  
+  /* Modo incorporado: a central já realizou o login */
+  .modo-incorporado #telaLogin,
+  .modo-incorporado #login,
+  .modo-incorporado .tela-login,
+  .modo-incorporado .login {
+    display: none !important;
+  }
+
+  .modo-incorporado body {
+    background: transparent !important;
+  }
+
+  .modo-incorporado .app,
+  .modo-incorporado #app,
+  .modo-incorporado #painel {
+    min-height: 100vh;
+  }
+
+
+    .controle-mural {
+      margin-bottom: 18px;
+      padding: 20px 22px;
+
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+
+      background: rgba(253, 251, 247, 0.97);
+
+      border: 1px solid rgba(123, 30, 79, 0.14);
+      border-radius: 16px;
+    }
+
+    .controle-mural p {
+      margin-top: 5px;
+
+      color: var(--texto-suave);
+
+      font-size: 0.68rem;
+      line-height: 1.5;
+    }
+
+    .status-mural {
+      display: inline-flex;
+      margin-top: 8px;
+      padding: 6px 10px;
+
+      border-radius: 999px;
+
+      font-size: 0.58rem;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+
+    .mural-aberto {
+      color: var(--verde);
+      background: rgba(47, 125, 98, 0.1);
+    }
+
+    .mural-fechado {
+      color: var(--erro);
+      background: rgba(161, 60, 93, 0.1);
+    }
+
+    .botao-controle {
+      min-width: 150px;
+    }
+
+    @media (max-width: 600px) {
+      .controle-mural {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .botao-controle {
+        width: 100%;
+      }
+    }
+
+</style>
+<script>
+    if (new URLSearchParams(window.location.search).get("embed") === "1") {
+      document.documentElement.classList.add("modo-incorporado");
+    }
+  </script>
+</head>
+
+<body>
+  <section class="login" id="telaLogin">
+    <div class="login-card">
+      <h1>Administrar mural</h1>
+
+      <p class="subtitulo">
+        Entre com seu usuário do Supabase para visualizar e apagar fotos.
+      </p>
+
+      <form id="formLogin">
+        <div class="campo">
+          <label for="email">E-mail</label>
+          <input type="email" id="email" required>
+        </div>
+
+        <div class="campo">
+          <label for="senha">Senha</label>
+          <input type="password" id="senha" required>
+        </div>
+
+        <button class="botao principal" type="submit" id="botaoLogin">
+          Entrar
+        </button>
+
+        <p id="mensagemLogin" class="mensagem"></p>
+      </form>
+    </div>
+  </section>
+
+  <main class="app oculto" id="app">
+    <header class="cabecalho">
+      <div>
+        <h1>Mural de fotos</h1>
+        <p class="subtitulo">
+          As fotos podem ser visualizadas aqui mesmo antes da abertura pública.
+        </p>
+      </div>
+
+      <div class="acoes">
+        <a class="botao secundario" href="mural.html" target="_blank">
+          Ver mural público
+        </a>
+
+        <button class="botao secundario" id="botaoSair">
+          Sair
+        </button>
+      </div>
+    </header>
+
+    <section class="controle-mural">
+      <div>
+        <h2>Controle de abertura</h2>
+
+        <p>
+          Abra o mural para testes ou feche para impedir novos envios.
+        </p>
+
+        <span
+          class="status-mural mural-fechado"
+          id="statusMural"
+        >
+          Verificando...
+        </span>
+      </div>
+
+      <button
+        class="botao principal botao-controle"
+        id="botaoAlternarMural"
+        type="button"
+      >
+        Abrir mural
+      </button>
+    </section>
+
+    <p id="mensagemApp" class="mensagem"></p>
+
+    <section class="grade" id="grade"></section>
+
+    <div class="vazio oculto" id="estadoVazio">
+      Nenhuma foto foi enviada.
+    </div>
+  </main>
+
+  <script>
+    const MODO_INCORPORADO =
+      new URLSearchParams(window.location.search).get("embed") === "1";
+
+const SUPABASE_URL =
+      "https://ywkgwctaaipwcyohomdj.supabase.co";
+
+    const SUPABASE_KEY =
+      "sb_publishable_zLcSs35Cps1zW0ncBW5qxw_zv-c3Ekt";
+
+    const BUCKET =
+      "mural-fotos";
+
+    const clienteSupabase =
+      window.supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_KEY
+      );
+
+    const telaLogin =
+      document.getElementById("telaLogin");
+
+    const app =
+      document.getElementById("app");
+
+    const mensagemLogin =
+      document.getElementById("mensagemLogin");
+
+    const mensagemApp =
+      document.getElementById("mensagemApp");
+
+    const statusMural =
+      document.getElementById("statusMural");
+
+    const botaoAlternarMural =
+      document.getElementById("botaoAlternarMural");
+
+    let muralAberto =
+      false;
+
+    iniciar();
+
+    async function iniciar() {
+
+      const { data } =
+        await clienteSupabase
+          .auth
+          .getSession();
+
+      if (data.session) {
+        abrirApp();
+        await carregarStatusMural();
+        await carregarFotos();
+      }
+    }
+
+    document
+      .getElementById("formLogin")
+      .addEventListener(
+        "submit",
+        async function (evento) {
+          evento.preventDefault();
+
+          const botao =
+            document.getElementById("botaoLogin");
+
+          botao.disabled = true;
+          botao.textContent =
+            "Entrando...";
+
+          const { error } =
+            await clienteSupabase
+              .auth
+              .signInWithPassword({
+                email:
+                  document
+                    .getElementById("email")
+                    .value
+                    .trim(),
+
+                password:
+                  document
+                    .getElementById("senha")
+                    .value
+              });
+
+          botao.disabled = false;
+          botao.textContent =
+            "Entrar";
+
+          if (error) {
+            mostrarMensagem(
+              mensagemLogin,
+              "Erro: " + error.message,
+              "erro"
+            );
+
+            return;
+          }
+
+          abrirApp();
+          await carregarStatusMural();
+          await carregarFotos();
+        }
+      );
+
+    document
+      .getElementById("botaoSair")
+      .addEventListener(
+        "click",
+        async function () {
+          await clienteSupabase
+            .auth
+            .signOut();
+
+          app.classList.add("oculto");
+          telaLogin.classList.remove("oculto");
+        }
+      );
+
+    botaoAlternarMural.addEventListener(
+      "click",
+      alternarMural
+    );
+
+    async function carregarStatusMural() {
+      const { data, error } =
+        await clienteSupabase.rpc(
+          "obter_status_mural"
+        );
+
+      if (error) {
+        mostrarMensagem(
+          mensagemApp,
+          "Erro ao verificar o mural: " +
+          error.message,
+          "erro"
+        );
+
+        return;
+      }
+
+      muralAberto =
+        data === true;
+
+      atualizarControleMural();
+    }
+
+    async function alternarMural() {
+      botaoAlternarMural.disabled =
+        true;
+
+      botaoAlternarMural.textContent =
+        muralAberto
+          ? "Fechando..."
+          : "Abrindo...";
+
+      const novoStatus =
+        !muralAberto;
+
+      try {
+        const { data, error } =
+          await clienteSupabase.rpc(
+            "definir_status_mural",
+            {
+              novo_status:
+                novoStatus
+            }
+          );
+
+        if (error) {
+          throw error;
+        }
+
+        muralAberto =
+          data === true;
+
+        atualizarControleMural();
+
+        mostrarMensagem(
+          mensagemApp,
+          muralAberto
+            ? "Mural aberto para os convidados."
+            : "Mural fechado para os convidados.",
+          "sucesso"
+        );
+      } catch (erro) {
+        mostrarMensagem(
+          mensagemApp,
+          "Não foi possível alterar o mural. Detalhe: " +
+          (erro.message || "erro desconhecido"),
+          "erro"
+        );
+
+        await carregarStatusMural();
+      } finally {
+        botaoAlternarMural.disabled =
+          false;
+      }
+    }
+
+    function atualizarControleMural() {
+      statusMural.textContent =
+        muralAberto
+          ? "Mural aberto"
+          : "Mural fechado";
+
+      statusMural.className =
+        muralAberto
+          ? "status-mural mural-aberto"
+          : "status-mural mural-fechado";
+
+      botaoAlternarMural.textContent =
+        muralAberto
+          ? "Fechar mural"
+          : "Abrir mural";
+    }
+
+    async function carregarFotos() {
+      const { data, error } =
+        await clienteSupabase
+          .from("mural_fotos")
+          .select("*")
+          .order(
+            "criado_em",
+            {
+              ascending: false
+            }
+          );
+
+      if (error) {
+        mostrarMensagem(
+          mensagemApp,
+          "Erro ao carregar: " +
+          error.message,
+          "erro"
+        );
+
+        return;
+      }
+
+      renderizarFotos(data || []);
+    }
+
+    function renderizarFotos(fotos) {
+      const grade =
+        document.getElementById("grade");
+
+      const vazio =
+        document.getElementById("estadoVazio");
+
+      grade.innerHTML = "";
+
+      vazio.classList.toggle(
+        "oculto",
+        fotos.length > 0
+      );
+
+      fotos.forEach(function (foto) {
+        const card =
+          document.createElement("article");
+
+        card.className =
+          "foto";
+
+        const imagem =
+          document.createElement("img");
+
+        imagem.src =
+          foto.imagem_url;
+
+        imagem.alt =
+          foto.nome || "Foto do mural";
+
+        const conteudo =
+          document.createElement("div");
+
+        conteudo.className =
+          "conteudo";
+
+        const nome =
+          document.createElement("h3");
+
+        nome.textContent =
+          foto.nome || "Convidado";
+
+        const recado =
+          document.createElement("p");
+
+        recado.textContent =
+          foto.recado || "Sem recado.";
+
+        const status =
+          document.createElement("span");
+
+        status.className =
+          foto.status === "aprovado"
+            ? "status status-aprovado"
+            : "status status-pendente";
+
+        status.textContent =
+          foto.status;
+
+        const acoes =
+          document.createElement("div");
+
+        acoes.className =
+          "acoes-foto";
+
+        const botaoStatus =
+          document.createElement("button");
+
+        botaoStatus.className =
+          "botao secundario";
+
+        botaoStatus.textContent =
+          foto.status === "aprovado"
+            ? "Ocultar"
+            : "Aprovar";
+
+        botaoStatus.addEventListener(
+          "click",
+          function () {
+            alterarStatus(foto);
+          }
+        );
+
+        const botaoApagar =
+          document.createElement("button");
+
+        botaoApagar.className =
+          "botao perigo";
+
+        botaoApagar.textContent =
+          "Apagar";
+
+        botaoApagar.addEventListener(
+          "click",
+          function () {
+            apagarFoto(foto);
+          }
+        );
+
+        acoes.append(
+          botaoStatus,
+          botaoApagar
+        );
+
+        conteudo.append(
+          nome,
+          recado,
+          status,
+          acoes
+        );
+
+        card.append(
+          imagem,
+          conteudo
+        );
+
+        grade.appendChild(card);
+      });
+    }
+
+    async function alterarStatus(foto) {
+      const novoStatus =
+        foto.status === "aprovado"
+          ? "pendente"
+          : "aprovado";
+
+      const { error } =
+        await clienteSupabase
+          .from("mural_fotos")
+          .update({
+            status:
+              novoStatus
+          })
+          .eq(
+            "id",
+            foto.id
+          );
+
+      if (error) {
+        mostrarMensagem(
+          mensagemApp,
+          "Erro: " + error.message,
+          "erro"
+        );
+
+        return;
+      }
+
+      mostrarMensagem(
+        mensagemApp,
+        "Status atualizado.",
+        "sucesso"
+      );
+
+      await carregarFotos();
+    }
+
+    async function apagarFoto(foto) {
+      const confirmou =
+        confirm(
+          "Deseja apagar esta foto?"
+        );
+
+      if (!confirmou) {
+        return;
+      }
+
+      const { error } =
+        await clienteSupabase
+          .from("mural_fotos")
+          .delete()
+          .eq(
+            "id",
+            foto.id
+          );
+
+      if (error) {
+        mostrarMensagem(
+          mensagemApp,
+          "Erro: " + error.message,
+          "erro"
+        );
+
+        return;
+      }
+
+      if (foto.imagem_path) {
+        await clienteSupabase
+          .storage
+          .from(BUCKET)
+          .remove([
+            foto.imagem_path
+          ]);
+      }
+
+      mostrarMensagem(
+        mensagemApp,
+        "Foto apagada.",
+        "sucesso"
+      );
+
+      await carregarFotos();
+    }
+
+    function abrirApp() {
+      telaLogin.classList.add("oculto");
+      app.classList.remove("oculto");
+    }
+
+    function mostrarMensagem(
+      elemento,
+      texto,
+      tipo
+    ) {
+      elemento.textContent =
+        texto;
+
+      elemento.className =
+        `mensagem ${tipo}`;
+    }
+  
+    /*
+      Integração com a central administrativa:
+      quando embed=1, esta página usa a mesma sessão do Supabase
+      e abre diretamente o conteúdo, sem exibir novo login.
+    */
+    async function abrirModoIncorporado() {
+      if (!MODO_INCORPORADO) {
+        return;
+      }
+
+      const { data, error } =
+        await clienteSupabase.auth.getSession();
+
+      if (error) {
+        console.error("Erro ao recuperar sessão:", error);
+        return;
+      }
+
+      if (data.session) {
+        abrirApp();
+
+        if (typeof carregarFotos === "function") {
+          await carregarFotos();
+        }
+      }
+    }
+
+    clienteSupabase.auth.onAuthStateChange(
+      async function (_evento, sessao) {
+        if (MODO_INCORPORADO && sessao) {
+          abrirApp();
+
+          if (typeof carregarFotos === "function") {
+            await carregarFotos();
+          }
+        }
+      }
+    );
+
+    abrirModoIncorporado();
+
+  </script>
+</body>
+</html>

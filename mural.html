@@ -1,0 +1,1314 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Mural de fotos - Anayad</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Montserrat:wght@300;400;500;600&display=swap"
+    rel="stylesheet"
+  >
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <style>
+    :root {
+      --vinho: #7b1e4f;
+      --vinho-escuro: #5d1239;
+      --rosa: #a84373;
+      --rosa-claro: #f3e2eb;
+      --creme: #fdfbf7;
+      --texto: #4a1c31;
+      --texto-suave: #7c5367;
+      --branco: #ffffff;
+      --verde: #2f7d62;
+      --erro: #9c3458;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      min-height: 100vh;
+      padding: 22px 14px 40px;
+
+      font-family: "Montserrat", sans-serif;
+      color: var(--texto);
+
+      background:
+        radial-gradient(
+          circle at top left,
+          rgba(168, 67, 115, 0.14),
+          transparent 30%
+        ),
+        linear-gradient(
+          135deg,
+          #f7eee9 0%,
+          #ecd8e1 50%,
+          #dfbdcd 100%
+        );
+
+      background-attachment: fixed;
+    }
+
+    button,
+    input,
+    textarea {
+      font: inherit;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    .oculto {
+      display: none !important;
+    }
+
+    .pagina {
+      width: 100%;
+      max-width: 1120px;
+      margin: 0 auto;
+    }
+
+    .cabecalho {
+      margin-bottom: 20px;
+      padding: 42px 24px 32px;
+
+      text-align: center;
+      background: rgba(253, 251, 247, 0.96);
+
+      border: 1px solid rgba(123, 30, 79, 0.16);
+      border-radius: 150px 150px 24px 24px;
+
+      box-shadow: 0 18px 42px rgba(74, 28, 49, 0.11);
+    }
+
+    .estrelas {
+      margin-bottom: 12px;
+
+      color: var(--rosa);
+
+      font-size: 1.1rem;
+      letter-spacing: 8px;
+    }
+
+    h1,
+    h2,
+    h3 {
+      color: var(--vinho);
+
+      font-family: "Cormorant Garamond", serif;
+    }
+
+    h1 {
+      font-size: clamp(2.8rem, 9vw, 4.7rem);
+      line-height: 0.95;
+    }
+
+    h2 {
+      font-size: 2rem;
+    }
+
+    .subtitulo {
+      max-width: 600px;
+      margin: 14px auto 0;
+
+      color: var(--texto-suave);
+
+      font-size: 0.78rem;
+      line-height: 1.8;
+    }
+
+    .bloqueio {
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 34px 24px;
+
+      text-align: center;
+      background: rgba(253, 251, 247, 0.95);
+
+      border: 1px solid rgba(123, 30, 79, 0.16);
+      border-radius: 22px;
+
+      box-shadow: 0 14px 30px rgba(74, 28, 49, 0.09);
+    }
+
+    .bloqueio-icone {
+      width: 72px;
+      height: 72px;
+      margin: 0 auto 18px;
+
+      display: grid;
+      place-items: center;
+
+      color: var(--vinho);
+      background: var(--rosa-claro);
+
+      border-radius: 50%;
+
+      font-size: 1.7rem;
+    }
+
+    .contador {
+      margin-top: 20px;
+
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .contador-item {
+      padding: 14px 8px;
+
+      background: #ffffff;
+      border: 1px solid rgba(123, 30, 79, 0.12);
+      border-radius: 14px;
+    }
+
+    .contador-valor {
+      display: block;
+
+      color: var(--vinho);
+
+      font-family: "Cormorant Garamond", serif;
+      font-size: 2rem;
+      font-weight: 700;
+      line-height: 1;
+    }
+
+    .contador-rotulo {
+      display: block;
+      margin-top: 5px;
+
+      color: var(--texto-suave);
+
+      font-size: 0.57rem;
+      text-transform: uppercase;
+    }
+
+    .area-mural {
+      display: grid;
+      grid-template-columns: 360px minmax(0, 1fr);
+      gap: 18px;
+      align-items: start;
+    }
+
+    .painel {
+      background: rgba(253, 251, 247, 0.96);
+
+      border: 1px solid rgba(123, 30, 79, 0.15);
+      border-radius: 20px;
+
+      box-shadow: 0 13px 30px rgba(74, 28, 49, 0.09);
+    }
+
+    .formulario {
+      padding: 22px;
+      position: sticky;
+      top: 18px;
+    }
+
+    .campo {
+      margin-top: 15px;
+    }
+
+    .campo label {
+      display: block;
+      margin-bottom: 7px;
+
+      color: var(--vinho-escuro);
+
+      font-size: 0.67rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .campo input,
+    .campo textarea {
+      width: 100%;
+      min-height: 48px;
+      padding: 12px 13px;
+
+      color: var(--texto);
+      background: #ffffff;
+
+      border: 1px solid rgba(123, 30, 79, 0.22);
+      border-radius: 9px;
+
+      outline: none;
+    }
+
+    .campo textarea {
+      min-height: 100px;
+      resize: vertical;
+    }
+
+    .campo input:focus,
+    .campo textarea:focus {
+      border-color: var(--vinho);
+      box-shadow: 0 0 0 3px rgba(123, 30, 79, 0.08);
+    }
+
+    .preview {
+      width: 100%;
+      aspect-ratio: 4 / 3;
+      margin-top: 15px;
+
+      display: grid;
+      place-items: center;
+      overflow: hidden;
+
+      color: var(--texto-suave);
+      background: var(--rosa-claro);
+
+      border: 1px dashed rgba(123, 30, 79, 0.3);
+      border-radius: 13px;
+
+      font-size: 0.7rem;
+      text-align: center;
+    }
+
+    .preview img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .arquivo {
+      width: 100%;
+      margin-top: 15px;
+      padding: 12px;
+
+      color: var(--texto);
+      background: #ffffff;
+
+      border: 1px solid rgba(123, 30, 79, 0.22);
+      border-radius: 10px;
+    }
+
+    .ajuda {
+      margin-top: 6px;
+
+      color: var(--texto-suave);
+
+      font-size: 0.61rem;
+      line-height: 1.5;
+    }
+
+    .botao {
+      width: 100%;
+      min-height: 48px;
+      margin-top: 16px;
+      padding: 12px 18px;
+
+      color: #ffffff;
+      background: var(--vinho);
+
+      border: 1px solid var(--vinho);
+      border-radius: 999px;
+
+      font-size: 0.67rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .botao:disabled {
+      opacity: 0.62;
+      cursor: wait;
+    }
+
+    .mensagem {
+      display: none;
+      margin-top: 14px;
+      padding: 13px;
+
+      border-radius: 9px;
+
+      font-size: 0.72rem;
+      line-height: 1.5;
+    }
+
+    .mensagem.sucesso {
+      display: block;
+
+      color: var(--verde);
+      background: #e9f6f1;
+    }
+
+    .mensagem.erro {
+      display: block;
+
+      color: var(--erro);
+      background: #ffe4ec;
+    }
+
+    .mural-topo {
+      padding: 20px 22px;
+
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+
+      border-bottom: 1px solid rgba(123, 30, 79, 0.1);
+    }
+
+    .mural-topo span {
+      color: var(--texto-suave);
+      font-size: 0.66rem;
+    }
+
+    .grade {
+      padding: 18px;
+
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .foto {
+      overflow: hidden;
+
+      background: #ffffff;
+
+      border: 1px solid rgba(123, 30, 79, 0.12);
+      border-radius: 16px;
+    }
+
+    .foto img {
+      width: 100%;
+      aspect-ratio: 4 / 3;
+
+      display: block;
+      object-fit: cover;
+
+      background: var(--rosa-claro);
+    }
+
+    .foto-conteudo {
+      padding: 15px;
+    }
+
+    .foto h3 {
+      font-size: 1.35rem;
+      line-height: 1.05;
+    }
+
+    .foto p {
+      margin-top: 7px;
+
+      color: var(--texto-suave);
+
+      font-size: 0.68rem;
+      line-height: 1.55;
+    }
+
+    .foto-data {
+      display: block;
+      margin-top: 10px;
+
+      color: var(--texto-suave);
+
+      font-size: 0.56rem;
+    }
+
+    .vazio {
+      padding: 46px 20px;
+
+      color: var(--texto-suave);
+
+      font-size: 0.74rem;
+      line-height: 1.6;
+      text-align: center;
+    }
+
+    .voltar {
+      margin-top: 20px;
+      text-align: center;
+    }
+
+    .voltar a {
+      color: var(--vinho);
+
+      font-size: 0.64rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-decoration: none;
+      text-transform: uppercase;
+    }
+
+
+    .arquivo-oculto {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .upload-foto {
+      width: 100%;
+      min-height: 96px;
+      margin-top: 15px;
+      padding: 14px;
+
+      display: grid;
+      grid-template-columns: 46px minmax(0, 1fr) auto;
+      align-items: center;
+      gap: 13px;
+
+      color: var(--texto);
+      background: #ffffff;
+
+      border: 1px solid rgba(123, 30, 79, 0.22);
+      border-radius: 14px;
+
+      cursor: pointer;
+
+      box-shadow: 0 7px 18px rgba(74, 28, 49, 0.05);
+
+      transition:
+        transform 0.2s ease,
+        border-color 0.2s ease,
+        box-shadow 0.2s ease,
+        background-color 0.2s ease;
+    }
+
+    .upload-foto:hover {
+      transform: translateY(-1px);
+
+      background: #fffafd;
+      border-color: rgba(123, 30, 79, 0.4);
+
+      box-shadow: 0 10px 24px rgba(74, 28, 49, 0.08);
+    }
+
+    .upload-foto:focus-within {
+      border-color: var(--vinho);
+      box-shadow: 0 0 0 3px rgba(123, 30, 79, 0.08);
+    }
+
+    .upload-icone {
+      width: 46px;
+      height: 46px;
+
+      display: grid;
+      place-items: center;
+
+      color: var(--vinho);
+      background: var(--rosa-claro);
+
+      border-radius: 12px;
+    }
+
+    .upload-icone svg {
+      width: 22px;
+      height: 22px;
+
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 1.8;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .upload-texto {
+      min-width: 0;
+    }
+
+    .upload-texto strong {
+      display: block;
+
+      color: var(--vinho-escuro);
+
+      font-size: 0.72rem;
+      font-weight: 600;
+      line-height: 1.35;
+    }
+
+    .upload-texto small {
+      display: block;
+      margin-top: 5px;
+
+      color: var(--texto-suave);
+
+      font-size: 0.59rem;
+      line-height: 1.45;
+    }
+
+    .upload-botao {
+      padding: 10px 14px;
+
+      color: #ffffff;
+      background: var(--vinho);
+
+      border-radius: 999px;
+
+      font-size: 0.56rem;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      text-align: center;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    .upload-foto.com-arquivo {
+      background: #fcf7fa;
+      border-color: rgba(123, 30, 79, 0.42);
+    }
+
+    .upload-foto.com-arquivo .upload-icone {
+      color: #ffffff;
+      background: var(--vinho);
+    }
+
+    .upload-foto.com-arquivo .upload-botao {
+      color: var(--vinho);
+      background: var(--rosa-claro);
+    }
+
+    @media (max-width: 520px) {
+      .upload-foto {
+        grid-template-columns: 42px minmax(0, 1fr);
+        grid-template-areas:
+          "icone texto"
+          "botao botao";
+      }
+
+      .upload-icone {
+        grid-area: icone;
+        width: 42px;
+        height: 42px;
+      }
+
+      .upload-texto {
+        grid-area: texto;
+      }
+
+      .upload-botao {
+        grid-area: botao;
+        width: 100%;
+      }
+    }
+
+    @media (max-width: 850px) {
+      .area-mural {
+        grid-template-columns: 1fr;
+      }
+
+      .formulario {
+        position: static;
+      }
+    }
+
+    @media (max-width: 600px) {
+      body {
+        padding: 10px;
+      }
+
+      .grade {
+        grid-template-columns: 1fr;
+      }
+
+      .contador {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <main class="pagina">
+    <section class="cabecalho">
+      <div class="estrelas">✦ ✷ ✦</div>
+
+      <h1>Mural de fotos</h1>
+
+      <p class="subtitulo">
+        Compartilhe momentos da festa, informe seu nome e deixe um recadinho
+        para tornar esse momento ainda mais especial.
+      </p>
+    </section>
+
+    <section class="bloqueio" id="telaBloqueada">
+      <div class="bloqueio-icone">🔒</div>
+
+      <h2>O mural ainda está fechado</h2>
+
+      <p class="subtitulo">
+        A abertura e o fechamento são controlados pela organização.
+        Aguarde a liberação do mural.
+      </p>
+
+      <div class="contador">
+        <div class="contador-item">
+          <span class="contador-valor" id="dias">0</span>
+          <span class="contador-rotulo">Dias</span>
+        </div>
+
+        <div class="contador-item">
+          <span class="contador-valor" id="horas">0</span>
+          <span class="contador-rotulo">Horas</span>
+        </div>
+
+        <div class="contador-item">
+          <span class="contador-valor" id="minutos">0</span>
+          <span class="contador-rotulo">Minutos</span>
+        </div>
+
+        <div class="contador-item">
+          <span class="contador-valor" id="segundos">0</span>
+          <span class="contador-rotulo">Segundos</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="area-mural oculto" id="telaMural">
+      <section class="painel formulario">
+        <h2>Adicionar ao mural</h2>
+
+        <div class="preview" id="preview">
+          A foto aparecerá aqui
+        </div>
+
+        <form id="formMural">
+          <label class="upload-foto" for="foto" id="uploadFoto">
+            <span class="upload-icone" aria-hidden="true">
+              <svg viewBox="0 0 24 24">
+                <path d="M12 16V4"></path>
+                <path d="M7 9l5-5 5 5"></path>
+                <path d="M5 20h14"></path>
+              </svg>
+            </span>
+
+            <span class="upload-texto">
+              <strong id="nomeArquivoFoto">
+                Selecionar uma foto
+              </strong>
+
+              <small>
+                JPG, PNG ou WEBP · máximo de 8 MB
+              </small>
+            </span>
+
+            <span class="upload-botao">
+              Escolher arquivo
+            </span>
+          </label>
+
+          <input
+            class="arquivo-oculto"
+            type="file"
+            id="foto"
+            accept="image/jpeg,image/png,image/webp"
+            required
+          >
+
+          <div class="campo">
+            <label for="nome">Seu nome</label>
+
+            <input
+              type="text"
+              id="nome"
+              maxlength="100"
+              placeholder="Digite seu nome"
+              required
+            >
+          </div>
+
+          <div class="campo">
+            <label for="recado">Recadinho do momento</label>
+
+            <textarea
+              id="recado"
+              maxlength="500"
+              placeholder="Escreva sobre o momento..."
+              required
+            ></textarea>
+          </div>
+
+          <button class="botao" type="submit" id="botaoEnviar">
+            Publicar no mural
+          </button>
+
+          <p id="mensagem" class="mensagem" aria-live="polite"></p>
+        </form>
+      </section>
+
+      <section class="painel">
+        <div class="mural-topo">
+          <h2>Fotos publicadas</h2>
+          <span id="contadorFotos">0 fotos</span>
+        </div>
+
+        <div class="grade" id="gradeFotos"></div>
+
+        <div class="vazio oculto" id="estadoVazio">
+          Ainda não há fotos publicadas. Seja a primeira pessoa a
+          compartilhar um momento.
+        </div>
+      </section>
+    </section>
+
+    <div class="voltar">
+      <a href="interacoes.html">Voltar às opções</a>
+    </div>
+  </main>
+
+  <script>
+    /*
+      ============================================================
+      CONFIGURAÇÃO
+      ============================================================
+      O mural abre em 23/08/2026 às 00:00 no horário de Manaus.
+      O horário -04:00 é fixado diretamente na data abaixo.
+    */
+
+    const DATA_ABERTURA =
+      new Date("2026-08-30T00:00:00-04:00");
+
+    /*
+      O mural pode ser aberto ou fechado manualmente pelo painel.
+      A data continua sendo exibida como referência visual.
+    */
+
+    const SUPABASE_URL =
+          "https://ywkgwctaaipwcyohomdj.supabase.co";
+
+    const SUPABASE_KEY =
+        "sb_publishable_zLcSs35Cps1zW0ncBW5qxw_zv-c3Ekt";
+
+    const BUCKET =
+      "mural-fotos";
+
+    const clienteSupabase =
+      window.supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_KEY
+      );
+
+    const telaBloqueada =
+      document.getElementById("telaBloqueada");
+
+    const telaMural =
+      document.getElementById("telaMural");
+
+    const formulario =
+      document.getElementById("formMural");
+
+    const campoFoto =
+      document.getElementById("foto");
+
+    const preview =
+      document.getElementById("preview");
+
+    const mensagem =
+      document.getElementById("mensagem");
+
+    const botaoEnviar =
+      document.getElementById("botaoEnviar");
+
+    atualizarContagemRegressiva();
+    verificarStatusDoMural();
+
+    setInterval(
+      atualizarContagemRegressiva,
+      1000
+    );
+
+    setInterval(
+      verificarStatusDoMural,
+      5000
+    );
+
+    const uploadFoto =
+      document.getElementById("uploadFoto");
+
+    const nomeArquivoFoto =
+      document.getElementById("nomeArquivoFoto");
+
+    campoFoto.addEventListener(
+      "change",
+      function () {
+        const arquivo = this.files[0];
+
+        if (!arquivo) {
+          preview.textContent =
+            "A foto aparecerá aqui";
+
+          nomeArquivoFoto.textContent =
+            "Selecionar uma foto";
+
+          uploadFoto.classList.remove(
+            "com-arquivo"
+          );
+
+          return;
+        }
+
+        if (arquivo.size > 8 * 1024 * 1024) {
+          mostrarMensagem(
+            "A foto deve ter no máximo 8 MB.",
+            "erro"
+          );
+
+          this.value = "";
+          return;
+        }
+
+        nomeArquivoFoto.textContent =
+          arquivo.name;
+
+        uploadFoto.classList.add(
+          "com-arquivo"
+        );
+
+        preview.innerHTML = "";
+
+        const imagem =
+          document.createElement("img");
+
+        imagem.src =
+          URL.createObjectURL(arquivo);
+
+        imagem.alt =
+          "Pré-visualização da foto";
+
+        preview.appendChild(imagem);
+      }
+    );
+
+    formulario.addEventListener(
+      "submit",
+      async function (evento) {
+        evento.preventDefault();
+
+        if (!muralEstaAberto()) {
+          mostrarMensagem(
+            "O mural ainda não está aberto.",
+            "erro"
+          );
+          return;
+        }
+
+        const arquivo =
+          campoFoto.files[0];
+
+        if (!arquivo) {
+          mostrarMensagem(
+            "Selecione uma foto.",
+            "erro"
+          );
+          return;
+        }
+
+        const nome =
+          document
+            .getElementById("nome")
+            .value
+            .trim();
+
+        const recado =
+          document
+            .getElementById("recado")
+            .value
+            .trim();
+
+        if (nome.length < 2) {
+          mostrarMensagem(
+            "Digite seu nome.",
+            "erro"
+          );
+          return;
+        }
+
+        if (recado.length < 2) {
+          mostrarMensagem(
+            "Escreva um recadinho.",
+            "erro"
+          );
+          return;
+        }
+
+        botaoEnviar.disabled = true;
+        botaoEnviar.textContent =
+          "Enviando foto...";
+
+        try {
+          const extensao =
+            arquivo.name
+              .split(".")
+              .pop()
+              .toLowerCase();
+
+          const caminho =
+            `${Date.now()}-${crypto.randomUUID()}.${extensao}`;
+
+          const { error: erroUpload } =
+            await clienteSupabase
+              .storage
+              .from(BUCKET)
+              .upload(
+                caminho,
+                arquivo,
+                {
+                  contentType: arquivo.type,
+                  upsert: false
+                }
+              );
+
+          if (erroUpload) {
+            throw erroUpload;
+          }
+
+          const { data: dadosUrl } =
+            clienteSupabase
+              .storage
+              .from(BUCKET)
+              .getPublicUrl(caminho);
+
+          const { error: erroBanco } =
+            await clienteSupabase
+              .from("mural_fotos")
+              .insert({
+                nome:
+                  document
+                    .getElementById("nome")
+                    .value
+                    .trim(),
+
+                recado:
+                  document
+                    .getElementById("recado")
+                    .value
+                    .trim(),
+
+                imagem_url:
+                  dadosUrl.publicUrl,
+
+                imagem_path:
+                  caminho,
+
+                status:
+                  "aprovado"
+              });
+
+          if (erroBanco) {
+            await clienteSupabase
+              .storage
+              .from(BUCKET)
+              .remove([caminho]);
+
+            throw erroBanco;
+          }
+
+          formulario.reset();
+
+          preview.textContent =
+            "A foto aparecerá aqui";
+
+          nomeArquivoFoto.textContent =
+            "Selecionar uma foto";
+
+          uploadFoto.classList.remove(
+            "com-arquivo"
+          );
+
+          mostrarMensagem(
+            "Foto, nome e recado publicados com sucesso!",
+            "sucesso"
+          );
+
+          await carregarFotos();
+        } catch (erro) {
+          console.error(erro);
+
+          mostrarMensagem(
+            "Não foi possível enviar: " +
+            erro.message,
+            "erro"
+          );
+        } finally {
+          botaoEnviar.disabled = false;
+          botaoEnviar.textContent =
+            "Publicar no mural";
+        }
+      }
+    );
+
+    let muralAberto =
+      false;
+
+    function muralEstaAberto() {
+      return muralAberto;
+    }
+
+    async function verificarStatusDoMural() {
+
+      try {
+        const { data, error } =
+          await clienteSupabase.rpc(
+            "obter_status_mural"
+          );
+
+        if (error) {
+          throw error;
+        }
+
+        muralAberto =
+          data === true;
+
+        if (muralAberto) {
+          telaBloqueada.classList.add(
+            "oculto"
+          );
+
+          telaMural.classList.remove(
+            "oculto"
+          );
+
+          await carregarFotos();
+        } else {
+          telaMural.classList.add(
+            "oculto"
+          );
+
+          telaBloqueada.classList.remove(
+            "oculto"
+          );
+        }
+      } catch (erro) {
+        console.error(
+          "Erro ao verificar status do mural:",
+          erro
+        );
+
+        const textoBloqueio =
+          telaBloqueada.querySelector(".subtitulo");
+
+        if (textoBloqueio) {
+          textoBloqueio.textContent =
+            "Não foi possível consultar o status do mural. Atualize a página.";
+        }
+
+        telaMural.classList.add(
+          "oculto"
+        );
+
+        telaBloqueada.classList.remove(
+          "oculto"
+        );
+      }
+    }
+
+    function atualizarContagemRegressiva() {
+      const agora =
+        new Date();
+
+      const diferenca =
+        DATA_ABERTURA.getTime() -
+        agora.getTime();
+
+      if (diferenca <= 0) {
+        document
+          .getElementById("dias")
+          .textContent = "0";
+
+        document
+          .getElementById("horas")
+          .textContent = "00";
+
+        document
+          .getElementById("minutos")
+          .textContent = "00";
+
+        document
+          .getElementById("segundos")
+          .textContent = "00";
+
+        return;
+      }
+
+      const totalSegundos =
+        Math.floor(
+          diferenca / 1000
+        );
+
+      const dias =
+        Math.floor(
+          totalSegundos / 86400
+        );
+
+      const horas =
+        Math.floor(
+          (totalSegundos % 86400) / 3600
+        );
+
+      const minutos =
+        Math.floor(
+          (totalSegundos % 3600) / 60
+        );
+
+      const segundos =
+        totalSegundos % 60;
+
+      document
+        .getElementById("dias")
+        .textContent =
+          dias;
+
+      document
+        .getElementById("horas")
+        .textContent =
+          String(horas).padStart(2, "0");
+
+      document
+        .getElementById("minutos")
+        .textContent =
+          String(minutos).padStart(2, "0");
+
+      document
+        .getElementById("segundos")
+        .textContent =
+          String(segundos).padStart(2, "0");
+    }
+
+    atualizarContagemRegressiva();
+
+    async function carregarFotos() {
+      const { data, error } =
+        await clienteSupabase
+          .from("mural_fotos")
+          .select(
+            "id, nome, recado, imagem_url, criado_em"
+          )
+          .eq("status", "aprovado")
+          .order(
+            "criado_em",
+            {
+              ascending: false
+            }
+          );
+
+      if (error) {
+        console.error(error);
+        return;
+      }
+
+      renderizarFotos(data || []);
+    }
+
+    function renderizarFotos(fotos) {
+      const grade =
+        document.getElementById("gradeFotos");
+
+      const estadoVazio =
+        document.getElementById("estadoVazio");
+
+      grade.innerHTML = "";
+
+      estadoVazio.classList.toggle(
+        "oculto",
+        fotos.length > 0
+      );
+
+      document
+        .getElementById("contadorFotos")
+        .textContent =
+          `${fotos.length} ${
+            fotos.length === 1
+              ? "foto"
+              : "fotos"
+          }`;
+
+      fotos.forEach(function (foto) {
+        const card =
+          document.createElement("article");
+
+        card.className =
+          "foto";
+
+        const imagem =
+          document.createElement("img");
+
+        imagem.src =
+          foto.imagem_url;
+
+        imagem.alt =
+          foto.nome
+            ? `Foto enviada por ${foto.nome}`
+            : "Foto enviada ao mural";
+
+        const conteudo =
+          document.createElement("div");
+
+        conteudo.className =
+          "foto-conteudo";
+
+        const nome =
+          document.createElement("h3");
+
+        nome.textContent =
+          foto.nome || "Convidado";
+
+        const recado =
+          document.createElement("p");
+
+        recado.textContent =
+          foto.recado ||
+          "Um registro especial da festa.";
+
+        const data =
+          document.createElement("span");
+
+        data.className =
+          "foto-data";
+
+        data.textContent =
+          new Intl.DateTimeFormat(
+            "pt-BR",
+            {
+              dateStyle: "short",
+              timeStyle: "short"
+            }
+          ).format(
+            new Date(foto.criado_em)
+          );
+
+        conteudo.append(
+          nome,
+          recado,
+          data
+        );
+
+        card.append(
+          imagem,
+          conteudo
+        );
+
+        grade.appendChild(card);
+      });
+    }
+
+    function mostrarMensagem(texto, tipo) {
+      mensagem.textContent =
+        texto;
+
+      mensagem.className =
+        `mensagem ${tipo}`;
+    }
+  </script>
+</body>
+</html>

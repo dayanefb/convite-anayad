@@ -1,0 +1,2321 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1"
+  >
+
+  <title>Administrar quiz - Anayad</title>
+
+  <link
+    rel="preconnect"
+    href="https://fonts.googleapis.com"
+  >
+  <link
+    rel="preconnect"
+    href="https://fonts.gstatic.com"
+    crossorigin
+  >
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Montserrat:wght@300;400;500;600&display=swap"
+    rel="stylesheet"
+  >
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <style>
+    :root {
+      --vinho: #7b1e4f;
+      --vinho-escuro: #5d1239;
+      --rosa-claro: #f3e2eb;
+      --creme: #fdfbf7;
+      --texto: #4a1c31;
+      --texto-suave: #7c5367;
+      --verde: #2f7d62;
+      --erro: #a13c5d;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      min-height: 100vh;
+      padding: 18px;
+
+      font-family: "Montserrat", sans-serif;
+      color: var(--texto);
+
+      background:
+        linear-gradient(
+          135deg,
+          #f7eee9,
+          #ecd8e1 50%,
+          #dfbdcd
+        );
+    }
+
+    button,
+    input,
+    textarea,
+    select {
+      font: inherit;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    .oculto {
+      display: none !important;
+    }
+
+    .pagina {
+      width: 100%;
+      max-width: 1280px;
+      margin: 0 auto;
+    }
+
+    .cartao {
+      margin-bottom: 18px;
+      padding: 22px;
+
+      background: rgba(253, 251, 247, 0.97);
+
+      border: 1px solid rgba(123, 30, 79, 0.15);
+      border-radius: 20px;
+    }
+
+    h1,
+    h2,
+    h3 {
+      color: var(--vinho);
+      font-family: "Cormorant Garamond", serif;
+    }
+
+    h1 {
+      font-size: 3rem;
+    }
+
+    h2 {
+      font-size: 2rem;
+    }
+
+    .login {
+      max-width: 480px;
+      margin: 8vh auto;
+    }
+
+    .campo {
+      margin-top: 13px;
+    }
+
+    .campo label {
+      display: block;
+      margin-bottom: 7px;
+
+      color: var(--vinho-escuro);
+
+      font-size: 0.67rem;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+
+    .campo input,
+    .campo textarea,
+    .campo select {
+      width: 100%;
+      min-height: 46px;
+      padding: 11px 12px;
+
+      border: 1px solid rgba(123, 30, 79, 0.21);
+      border-radius: 9px;
+    }
+
+    .campo textarea {
+      min-height: 90px;
+      resize: vertical;
+    }
+
+    .botao {
+      min-height: 44px;
+      padding: 10px 15px;
+
+      border-radius: 999px;
+
+      font-size: 0.64rem;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+
+    .principal {
+      color: #ffffff;
+      background: var(--vinho);
+      border: 1px solid var(--vinho);
+    }
+
+    .secundario {
+      color: var(--vinho);
+      background: transparent;
+      border: 1px solid rgba(123, 30, 79, 0.3);
+    }
+
+    .perigo {
+      color: var(--erro);
+      background: transparent;
+      border: 1px solid rgba(161, 60, 93, 0.35);
+    }
+
+    .acoes {
+      margin-top: 14px;
+
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .controle {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 16px;
+      align-items: center;
+    }
+
+    .status {
+      display: inline-flex;
+      margin-top: 8px;
+      padding: 6px 10px;
+
+      color: var(--vinho);
+      background: var(--rosa-claro);
+
+      border-radius: 999px;
+
+      font-size: 0.6rem;
+      font-weight: 600;
+    }
+
+    .grade {
+      display: grid;
+      grid-template-columns: 420px minmax(0, 1fr);
+      gap: 18px;
+      align-items: start;
+    }
+
+    .alternativas-editor {
+      display: grid;
+      gap: 8px;
+    }
+
+    .linha-alternativa {
+      display: grid;
+      grid-template-columns: 36px minmax(0, 1fr) 44px;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .radio-correta {
+      width: 20px !important;
+      min-height: auto !important;
+    }
+
+    .upload {
+      display: block;
+      padding: 12px;
+
+      background: #ffffff;
+
+      border: 1px dashed rgba(123, 30, 79, 0.34);
+      border-radius: 12px;
+
+      cursor: pointer;
+      text-align: center;
+    }
+
+    .upload input {
+      display: none;
+    }
+
+    .preview {
+      width: 100%;
+      max-height: 220px;
+      margin-top: 10px;
+
+      object-fit: contain;
+
+      border-radius: 10px;
+    }
+
+    .lista {
+      display: grid;
+      gap: 10px;
+    }
+
+    .item {
+      padding: 15px;
+
+      background: #ffffff;
+
+      border: 1px solid rgba(123, 30, 79, 0.12);
+      border-radius: 14px;
+    }
+
+    .item-topo {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .meta {
+      margin-top: 6px;
+
+      color: var(--texto-suave);
+
+      font-size: 0.65rem;
+      line-height: 1.5;
+    }
+
+    .participantes-admin {
+      display: grid;
+      grid-template-columns: repeat(
+        auto-fit,
+        minmax(150px, 1fr)
+      );
+      gap: 8px;
+      margin-top: 14px;
+    }
+
+    .participante-admin {
+      padding: 10px 12px;
+
+      background: #ffffff;
+
+      border: 1px solid rgba(123, 30, 79, 0.12);
+      border-radius: 11px;
+
+      font-size: 0.7rem;
+      font-weight: 600;
+    }
+
+    .mensagem {
+      display: none;
+      margin-top: 12px;
+      padding: 12px;
+
+      border-radius: 9px;
+
+      font-size: 0.72rem;
+    }
+
+    .mensagem.erro {
+      display: block;
+      color: var(--erro);
+      background: #ffe4ec;
+    }
+
+    .mensagem.sucesso {
+      display: block;
+      color: var(--verde);
+      background: #e9f6f1;
+    }
+
+    .modo-incorporado #login {
+      display: none !important;
+    }
+
+    .modo-incorporado body {
+      background: transparent !important;
+    }
+
+
+    .ranking-admin {
+      display: grid;
+      gap: 9px;
+      margin-top: 14px;
+    }
+
+    .linha-ranking-admin {
+      padding: 13px 15px;
+      display: grid;
+      grid-template-columns: 44px minmax(0, 1fr) auto auto;
+      gap: 10px;
+      align-items: center;
+      background: #ffffff;
+      border: 1px solid rgba(123, 30, 79, 0.12);
+      border-radius: 13px;
+    }
+
+    .linha-ranking-admin:first-child {
+      border-color: rgba(184, 132, 32, 0.42);
+      box-shadow: 0 8px 20px rgba(184, 132, 32, 0.12);
+    }
+
+    .posicao-ranking-admin {
+      width: 34px;
+      height: 34px;
+      display: grid;
+      place-items: center;
+      color: var(--vinho);
+      background: var(--rosa-claro);
+      border-radius: 50%;
+      font-weight: 700;
+    }
+
+    .linha-ranking-admin:first-child .posicao-ranking-admin {
+      color: #ffffff;
+      background: #b88420;
+    }
+
+    .nome-ranking-admin {
+      min-width: 0;
+      font-size: 0.74rem;
+      font-weight: 600;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .pontos-ranking-admin {
+      color: var(--vinho);
+      font-size: 0.72rem;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .dados-ranking-admin {
+      color: var(--texto-suave);
+      font-size: 0.64rem;
+      white-space: nowrap;
+    }
+
+    @media (max-width: 900px) {
+      .grade {
+        grid-template-columns: 1fr;
+      }
+
+      .controle {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+
+  <script>
+    if (
+      new URLSearchParams(
+        window.location.search
+      ).get("embed") === "1"
+    ) {
+      document.documentElement
+        .classList.add(
+          "modo-incorporado"
+        );
+    }
+  </script>
+</head>
+
+<body>
+  <section
+    class="cartao login"
+    id="login"
+  >
+    <h1>Administrar quiz</h1>
+
+    <p>
+      Entre com o usuário administrativo do Supabase.
+    </p>
+
+    <div class="campo">
+      <label for="email">E-mail</label>
+      <input
+        id="email"
+        type="email"
+      >
+    </div>
+
+    <div class="campo">
+      <label for="senha">Senha</label>
+      <input
+        id="senha"
+        type="password"
+      >
+    </div>
+
+    <button
+      class="botao principal"
+      id="entrar"
+      type="button"
+      style="width: 100%; margin-top: 16px;"
+    >
+      Entrar
+    </button>
+
+    <p
+      class="mensagem"
+      id="mensagemLogin"
+    ></p>
+  </section>
+
+  <main
+    class="pagina oculto"
+    id="app"
+  >
+    <section class="cartao controle">
+      <div>
+        <h1>Quiz da Anayad</h1>
+
+        <p>
+          Crie perguntas e controle o jogo ao vivo.
+        </p>
+
+        <span
+          class="status"
+          id="statusQuiz"
+        >
+          Aguardando
+        </span>
+      </div>
+
+      <div class="acoes">
+        <button
+          class="botao principal"
+          id="iniciarQuiz"
+          type="button"
+        >
+          Iniciar quiz
+        </button>
+
+        <button
+          class="botao secundario"
+          id="botaoRespostaProxima"
+          type="button"
+        >
+          Mostrar resposta
+        </button>
+
+        <button
+          class="botao secundario"
+          id="anterior"
+          type="button"
+        >
+          Anterior
+        </button>
+
+        <button
+          class="botao perigo"
+          id="finalizar"
+          type="button"
+        >
+          Finalizar
+        </button>
+
+        <button
+          class="botao perigo"
+          id="reiniciarSala"
+          type="button"
+        >
+          Reiniciar sala
+        </button>
+
+        <button
+          class="botao secundario"
+          id="sair"
+          type="button"
+        >
+          Sair
+        </button>
+      </div>
+    </section>
+
+    <section class="cartao">
+      <h2>Sala de espera</h2>
+
+      <p
+        class="meta"
+        id="contadorSala"
+      >
+        0 participantes
+      </p>
+
+      <div
+        class="participantes-admin"
+        id="participantesAdmin"
+      ></div>
+    </section>
+
+    <section
+      class="cartao oculto"
+      id="secaoRankingAdmin"
+    >
+      <h2>Ranking final</h2>
+
+      <p class="meta">
+        O ranking aparece após finalizar o quiz.
+      </p>
+
+      <div
+        class="ranking-admin"
+        id="rankingAdmin"
+      ></div>
+
+      <p
+        class="mensagem"
+        id="mensagemRankingAdmin"
+      ></p>
+    </section>
+
+    <p
+      class="mensagem"
+      id="mensagemApp"
+    ></p>
+
+    <div class="grade">
+      <section class="cartao">
+        <h2 id="tituloFormulario">
+          Adicionar pergunta
+        </h2>
+
+        <input
+          type="hidden"
+          id="perguntaId"
+        >
+        <input
+          type="hidden"
+          id="imagemAtual"
+        >
+        <input
+          type="hidden"
+          id="imagemPathAtual"
+        >
+
+        <div class="campo">
+          <label for="textoPergunta">
+            Pergunta
+          </label>
+
+          <textarea
+            id="textoPergunta"
+            maxlength="500"
+          ></textarea>
+        </div>
+
+        <div class="campo">
+          <label>Imagem opcional</label>
+
+          <label class="upload">
+            Selecionar imagem
+
+            <input
+              type="file"
+              id="imagem"
+              accept="image/jpeg,image/png,image/webp"
+            >
+          </label>
+
+          <img
+            id="preview"
+            class="preview oculto"
+            alt=""
+          >
+        </div>
+
+        <div class="campo">
+          <label>Alternativas</label>
+
+          <div
+            class="alternativas-editor"
+            id="alternativasEditor"
+          ></div>
+
+          <button
+            class="botao secundario"
+            id="adicionarAlternativa"
+            type="button"
+            style="margin-top: 8px;"
+          >
+            Adicionar alternativa
+          </button>
+        </div>
+
+        <div class="campo">
+          <label for="tempo">
+            Tempo da pergunta
+          </label>
+
+          <input
+            id="tempo"
+            type="number"
+            min="5"
+            max="300"
+            value="20"
+          >
+        </div>
+
+        <div class="campo">
+          <label for="ordem">
+            Ordem
+          </label>
+
+          <input
+            id="ordem"
+            type="number"
+            min="0"
+            value="0"
+          >
+        </div>
+
+        <div class="campo">
+          <label for="automatico">
+            Após terminar o tempo
+          </label>
+
+          <select id="automatico">
+            <option value="false">
+              Mostrar resposta e aguardar meu comando
+            </option>
+
+            <option value="true">
+              Mostrar resposta e avançar após 5 segundos
+            </option>
+          </select>
+        </div>
+
+        <div class="campo">
+          <label for="ativa">
+            Visibilidade
+          </label>
+
+          <select id="ativa">
+            <option value="true">
+              Ativa
+            </option>
+
+            <option value="false">
+              Oculta
+            </option>
+          </select>
+        </div>
+
+        <div class="acoes">
+          <button
+            class="botao principal"
+            id="salvarPergunta"
+            type="button"
+          >
+            Salvar pergunta
+          </button>
+
+          <button
+            class="botao secundario oculto"
+            id="cancelarEdicao"
+            type="button"
+          >
+            Cancelar edição
+          </button>
+        </div>
+      </section>
+
+      <section class="cartao">
+        <h2>Perguntas cadastradas</h2>
+
+        <div
+          class="lista"
+          id="listaPerguntas"
+        ></div>
+      </section>
+    </div>
+  </main>
+
+  <script>
+    const MODO_INCORPORADO =
+      new URLSearchParams(
+        window.location.search
+      ).get("embed") === "1";
+
+    const SUPABASE_URL =
+      "https://ywkgwctaaipwcyohomdj.supabase.co";
+
+    const SUPABASE_KEY =
+      "sb_publishable_zLcSs35Cps1zW0ncBW5qxw_zv-c3Ekt";
+
+    const BUCKET =
+      "quiz-imagens";
+
+    const clienteSupabase =
+      window.supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_KEY
+      );
+
+    const obterElemento =
+      (id) =>
+        document.getElementById(id);
+
+    let perguntas =
+      [];
+
+    let estado =
+      null;
+
+    let temporizadorAutomatico =
+      null;
+
+    let intervaloEstado =
+      null;
+
+    let carregandoEstado =
+      false;
+
+    let rankingFinalExibido =
+      false;
+
+    let assinaturaRanking =
+      "";
+
+    obterElemento("entrar")
+      .addEventListener(
+        "click",
+        fazerLogin
+      );
+
+    obterElemento("sair")
+      .addEventListener(
+        "click",
+        sair
+      );
+
+    obterElemento(
+      "adicionarAlternativa"
+    ).addEventListener(
+      "click",
+      function () {
+        adicionarLinhaAlternativa(
+          ""
+        );
+      }
+    );
+
+    obterElemento(
+      "salvarPergunta"
+    ).addEventListener(
+      "click",
+      salvarPergunta
+    );
+
+    obterElemento(
+      "cancelarEdicao"
+    ).addEventListener(
+      "click",
+      limparFormulario
+    );
+
+    obterElemento(
+      "iniciarQuiz"
+    ).addEventListener(
+      "click",
+      iniciarQuiz
+    );
+
+    obterElemento(
+      "botaoRespostaProxima"
+    ).addEventListener(
+      "click",
+      revelarOuAvancar
+    );
+
+    obterElemento(
+      "anterior"
+    ).addEventListener(
+      "click",
+      voltarPergunta
+    );
+
+    obterElemento(
+      "finalizar"
+    ).addEventListener(
+      "click",
+      finalizarQuiz
+    );
+
+    obterElemento(
+      "reiniciarSala"
+    ).addEventListener(
+      "click",
+      reiniciarSala
+    );
+
+    obterElemento("imagem")
+      .addEventListener(
+        "change",
+        visualizarImagem
+      );
+
+    iniciarPagina();
+
+    async function iniciarPagina() {
+      const { data, error } =
+        await clienteSupabase.auth
+          .getSession();
+
+      if (error) {
+        console.error(error);
+        return;
+      }
+
+      if (data.session) {
+        await abrirAplicacao();
+      }
+    }
+
+    clienteSupabase.auth
+      .onAuthStateChange(
+        async function (
+          _evento,
+          sessao
+        ) {
+          if (
+            MODO_INCORPORADO &&
+            sessao
+          ) {
+            await abrirAplicacao();
+          }
+        }
+      );
+
+    async function fazerLogin() {
+      const { error } =
+        await clienteSupabase.auth
+          .signInWithPassword({
+            email:
+              obterElemento(
+                "email"
+              ).value.trim(),
+
+            password:
+              obterElemento(
+                "senha"
+              ).value
+          });
+
+      if (error) {
+        mostrarMensagem(
+          obterElemento(
+            "mensagemLogin"
+          ),
+          error.message,
+          "erro"
+        );
+
+        return;
+      }
+
+      await abrirAplicacao();
+    }
+
+    async function sair() {
+      await clienteSupabase.auth
+        .signOut();
+
+      window.location.reload();
+    }
+
+    async function abrirAplicacao() {
+      obterElemento("login")
+        .classList.add("oculto");
+
+      obterElemento("app")
+        .classList.remove("oculto");
+
+      limparFormulario();
+
+      await carregarPerguntas();
+      await carregarEstado();
+      await carregarParticipantes();
+
+      if (!intervaloEstado) {
+        intervaloEstado =
+          setInterval(
+            async function () {
+              await carregarEstado();
+              await carregarParticipantes();
+            },
+            1500
+          );
+      }
+    }
+
+    function visualizarImagem() {
+      const arquivo =
+        obterElemento("imagem")
+          .files[0];
+
+      if (!arquivo) {
+        return;
+      }
+
+      obterElemento(
+        "preview"
+      ).src =
+        URL.createObjectURL(
+          arquivo
+        );
+
+      obterElemento(
+        "preview"
+      ).classList.remove(
+        "oculto"
+      );
+    }
+
+    function adicionarLinhaAlternativa(
+      valor,
+      correta = false
+    ) {
+      const linha =
+        document.createElement(
+          "div"
+        );
+
+      linha.className =
+        "linha-alternativa";
+
+      linha.innerHTML =
+        `
+          <input
+            class="radio-correta"
+            type="radio"
+            name="correta"
+            title="Marcar como correta"
+          >
+
+          <input
+            class="texto-alternativa"
+            maxlength="200"
+            placeholder="Alternativa"
+          >
+
+          <button
+            class="botao perigo remover"
+            type="button"
+            title="Remover alternativa"
+          >
+            ×
+          </button>
+        `;
+
+      linha.querySelector(
+        ".texto-alternativa"
+      ).value =
+        valor;
+
+      linha.querySelector(
+        ".radio-correta"
+      ).checked =
+        correta;
+
+      linha.querySelector(
+        ".remover"
+      ).addEventListener(
+        "click",
+        function () {
+          linha.remove();
+        }
+      );
+
+      obterElemento(
+        "alternativasEditor"
+      ).appendChild(
+        linha
+      );
+    }
+
+    function limparFormulario() {
+      obterElemento(
+        "perguntaId"
+      ).value =
+        "";
+
+      obterElemento(
+        "textoPergunta"
+      ).value =
+        "";
+
+      obterElemento(
+        "tempo"
+      ).value =
+        20;
+
+      obterElemento(
+        "ordem"
+      ).value =
+        0;
+
+      obterElemento(
+        "automatico"
+      ).value =
+        "false";
+
+      obterElemento(
+        "ativa"
+      ).value =
+        "true";
+
+      obterElemento(
+        "imagem"
+      ).value =
+        "";
+
+      obterElemento(
+        "imagemAtual"
+      ).value =
+        "";
+
+      obterElemento(
+        "imagemPathAtual"
+      ).value =
+        "";
+
+      obterElemento(
+        "preview"
+      ).classList.add(
+        "oculto"
+      );
+
+      obterElemento(
+        "alternativasEditor"
+      ).innerHTML =
+        "";
+
+      adicionarLinhaAlternativa("");
+      adicionarLinhaAlternativa("");
+      adicionarLinhaAlternativa("");
+      adicionarLinhaAlternativa("");
+
+      obterElemento(
+        "tituloFormulario"
+      ).textContent =
+        "Adicionar pergunta";
+
+      obterElemento(
+        "cancelarEdicao"
+      ).classList.add(
+        "oculto"
+      );
+    }
+
+    async function salvarPergunta() {
+      const linhas =
+        [
+          ...document.querySelectorAll(
+            ".linha-alternativa"
+          )
+        ];
+
+      const alternativas =
+        linhas
+          .map(
+            function (linha) {
+              return linha
+                .querySelector(
+                  ".texto-alternativa"
+                )
+                .value
+                .trim();
+            }
+          )
+          .filter(Boolean);
+
+      const correta =
+        linhas.findIndex(
+          function (linha) {
+            return linha
+              .querySelector(
+                ".radio-correta"
+              )
+              .checked;
+          }
+        );
+
+      const texto =
+        obterElemento(
+          "textoPergunta"
+        ).value.trim();
+
+      if (
+        texto.length < 2 ||
+        alternativas.length < 2 ||
+        correta < 0
+      ) {
+        mostrarMensagem(
+          obterElemento(
+            "mensagemApp"
+          ),
+          "Preencha a pergunta, ao menos duas alternativas e marque a correta.",
+          "erro"
+        );
+
+        return;
+      }
+
+      let imagemUrl =
+        obterElemento(
+          "imagemAtual"
+        ).value || null;
+
+      let imagemPath =
+        obterElemento(
+          "imagemPathAtual"
+        ).value || null;
+
+      const arquivo =
+        obterElemento("imagem")
+          .files[0];
+
+      if (arquivo) {
+        const extensao =
+          arquivo.name
+            .split(".")
+            .pop()
+            .toLowerCase();
+
+        const nomeArquivo =
+          `${Date.now()}-${crypto.randomUUID()}.${extensao}`;
+
+        const { error: erroUpload } =
+          await clienteSupabase.storage
+            .from(BUCKET)
+            .upload(
+              nomeArquivo,
+              arquivo,
+              {
+                contentType:
+                  arquivo.type
+              }
+            );
+
+        if (erroUpload) {
+          mostrarMensagem(
+            obterElemento(
+              "mensagemApp"
+            ),
+            erroUpload.message,
+            "erro"
+          );
+
+          return;
+        }
+
+        imagemUrl =
+          clienteSupabase.storage
+            .from(BUCKET)
+            .getPublicUrl(
+              nomeArquivo
+            )
+            .data
+            .publicUrl;
+
+        imagemPath =
+          nomeArquivo;
+      }
+
+      const registro = {
+        pergunta:
+          texto,
+
+        alternativas:
+          alternativas,
+
+        correta:
+          correta,
+
+        imagem_url:
+          imagemUrl,
+
+        imagem_path:
+          imagemPath,
+
+        tempo_segundos:
+          Number(
+            obterElemento(
+              "tempo"
+            ).value
+          ),
+
+        avanco_automatico:
+          obterElemento(
+            "automatico"
+          ).value === "true",
+
+        ordem:
+          Number(
+            obterElemento(
+              "ordem"
+            ).value
+          ),
+
+        ativa:
+          obterElemento(
+            "ativa"
+          ).value === "true",
+
+        atualizado_em:
+          new Date()
+            .toISOString()
+      };
+
+      const id =
+        obterElemento(
+          "perguntaId"
+        ).value;
+
+      const consulta =
+        id
+          ? clienteSupabase
+              .from(
+                "quiz_perguntas"
+              )
+              .update(registro)
+              .eq(
+                "id",
+                id
+              )
+          : clienteSupabase
+              .from(
+                "quiz_perguntas"
+              )
+              .insert(registro);
+
+      const { error } =
+        await consulta;
+
+      if (error) {
+        mostrarMensagem(
+          obterElemento(
+            "mensagemApp"
+          ),
+          error.message,
+          "erro"
+        );
+
+        return;
+      }
+
+      mostrarMensagem(
+        obterElemento(
+          "mensagemApp"
+        ),
+        "Pergunta salva.",
+        "sucesso"
+      );
+
+      limparFormulario();
+      await carregarPerguntas();
+    }
+
+    async function carregarPerguntas() {
+      const { data, error } =
+        await clienteSupabase
+          .from(
+            "quiz_perguntas"
+          )
+          .select("*")
+          .order(
+            "ordem",
+            {
+              ascending: true
+            }
+          )
+          .order(
+            "id",
+            {
+              ascending: true
+            }
+          );
+
+      if (error) {
+        mostrarMensagem(
+          obterElemento(
+            "mensagemApp"
+          ),
+          error.message,
+          "erro"
+        );
+
+        return;
+      }
+
+      perguntas =
+        data || [];
+
+      const lista =
+        obterElemento(
+          "listaPerguntas"
+        );
+
+      lista.innerHTML =
+        "";
+
+      perguntas.forEach(
+        function (
+          pergunta,
+          indice
+        ) {
+          const item =
+            document.createElement(
+              "article"
+            );
+
+          item.className =
+            "item";
+
+          item.innerHTML =
+            `
+              <div class="item-topo">
+                <div>
+                  <h3></h3>
+
+                  <p class="meta">
+                    ${pergunta.tempo_segundos}s ·
+                    ${
+                      pergunta.avanco_automatico
+                        ? "resposta + avanço automático"
+                        : "resposta + avanço manual"
+                    } ·
+                    ordem ${pergunta.ordem} ·
+                    ${
+                      pergunta.ativa
+                        ? "ativa"
+                        : "oculta"
+                    }
+                  </p>
+                </div>
+
+                <div class="acoes">
+                  <button
+                    class="botao secundario editar"
+                    type="button"
+                  >
+                    Editar
+                  </button>
+
+                  <button
+                    class="botao perigo apagar"
+                    type="button"
+                  >
+                    Apagar
+                  </button>
+                </div>
+              </div>
+            `;
+
+          item.querySelector(
+            "h3"
+          ).textContent =
+            `${indice + 1}. ${pergunta.pergunta}`;
+
+          item.querySelector(
+            ".editar"
+          ).addEventListener(
+            "click",
+            function () {
+              editarPergunta(
+                pergunta
+              );
+            }
+          );
+
+          item.querySelector(
+            ".apagar"
+          ).addEventListener(
+            "click",
+            function () {
+              apagarPergunta(
+                pergunta
+              );
+            }
+          );
+
+          lista.appendChild(
+            item
+          );
+        }
+      );
+    }
+
+    function editarPergunta(
+      pergunta
+    ) {
+      obterElemento(
+        "perguntaId"
+      ).value =
+        pergunta.id;
+
+      obterElemento(
+        "textoPergunta"
+      ).value =
+        pergunta.pergunta;
+
+      obterElemento(
+        "tempo"
+      ).value =
+        pergunta.tempo_segundos;
+
+      obterElemento(
+        "ordem"
+      ).value =
+        pergunta.ordem;
+
+      obterElemento(
+        "automatico"
+      ).value =
+        String(
+          pergunta.avanco_automatico
+        );
+
+      obterElemento(
+        "ativa"
+      ).value =
+        String(
+          pergunta.ativa
+        );
+
+      obterElemento(
+        "imagemAtual"
+      ).value =
+        pergunta.imagem_url || "";
+
+      obterElemento(
+        "imagemPathAtual"
+      ).value =
+        pergunta.imagem_path || "";
+
+      if (
+        pergunta.imagem_url
+      ) {
+        obterElemento(
+          "preview"
+        ).src =
+          pergunta.imagem_url;
+
+        obterElemento(
+          "preview"
+        ).classList.remove(
+          "oculto"
+        );
+      }
+
+      obterElemento(
+        "alternativasEditor"
+      ).innerHTML =
+        "";
+
+      pergunta.alternativas.forEach(
+        function (
+          alternativa,
+          indice
+        ) {
+          adicionarLinhaAlternativa(
+            alternativa,
+            indice === pergunta.correta
+          );
+        }
+      );
+
+      obterElemento(
+        "tituloFormulario"
+      ).textContent =
+        "Editar pergunta";
+
+      obterElemento(
+        "cancelarEdicao"
+      ).classList.remove(
+        "oculto"
+      );
+
+      window.scrollTo({
+        top:
+          0,
+
+        behavior:
+          "smooth"
+      });
+    }
+
+    async function apagarPergunta(
+      pergunta
+    ) {
+      const confirmou =
+        window.confirm(
+          "Apagar esta pergunta?"
+        );
+
+      if (!confirmou) {
+        return;
+      }
+
+      const { error } =
+        await clienteSupabase
+          .from(
+            "quiz_perguntas"
+          )
+          .delete()
+          .eq(
+            "id",
+            pergunta.id
+          );
+
+      if (error) {
+        mostrarMensagem(
+          obterElemento(
+            "mensagemApp"
+          ),
+          error.message,
+          "erro"
+        );
+
+        return;
+      }
+
+      if (
+        pergunta.imagem_path
+      ) {
+        await clienteSupabase.storage
+          .from(BUCKET)
+          .remove([
+            pergunta.imagem_path
+          ]);
+      }
+
+      await carregarPerguntas();
+    }
+
+    async function carregarParticipantes() {
+      const { data, error } =
+        await clienteSupabase.rpc(
+          "obter_participantes_sala"
+        );
+
+      if (error) {
+        return;
+      }
+
+      const participantes =
+        data || [];
+
+      const lista =
+        obterElemento(
+          "participantesAdmin"
+        );
+
+      lista.innerHTML =
+        "";
+
+      participantes.forEach(
+        function (participante) {
+          const item =
+            document.createElement(
+              "div"
+            );
+
+          item.className =
+            "participante-admin";
+
+          item.textContent =
+            participante.nome;
+
+          lista.appendChild(
+            item
+          );
+        }
+      );
+
+      obterElemento(
+        "contadorSala"
+      ).textContent =
+        `${participantes.length} ${
+          participantes.length === 1
+            ? "participante"
+            : "participantes"
+        }`;
+    }
+
+    async function carregarEstado() {
+      if (carregandoEstado) {
+        return;
+      }
+
+      carregandoEstado =
+        true;
+
+      const { data, error } =
+        await clienteSupabase
+          .from(
+            "quiz_estado"
+          )
+          .select("*")
+          .eq(
+            "id",
+            1
+          )
+          .single();
+
+      if (error) {
+        carregandoEstado =
+          false;
+
+        return;
+      }
+
+      estado =
+        data;
+
+      const atual =
+        perguntas.find(
+          function (pergunta) {
+            return pergunta.id ===
+              estado.pergunta_atual_id;
+          }
+        );
+
+      obterElemento(
+        "statusQuiz"
+      ).textContent =
+        `${estado.status} · ${estado.fase}${
+          atual
+            ? ` · ${atual.pergunta}`
+            : ""
+        }`;
+
+      obterElemento(
+        "botaoRespostaProxima"
+      ).textContent =
+        estado.fase === "resposta"
+          ? "Próxima pergunta"
+          : "Mostrar resposta";
+
+      clearTimeout(
+        temporizadorAutomatico
+      );
+
+      if (
+        estado.status ===
+          "em_andamento" &&
+        estado.fase ===
+          "resposta" &&
+        atual?.avanco_automatico &&
+        estado.revelada_em
+      ) {
+        const restante =
+          5000 -
+          (
+            Date.now() -
+            new Date(
+              estado.revelada_em
+            ).getTime()
+          );
+
+        if (restante <= 0) {
+          await avancarPergunta();
+        } else {
+          temporizadorAutomatico =
+            setTimeout(
+              avancarPergunta,
+              restante + 200
+            );
+        }
+      }
+
+      if (
+        estado.status ===
+          "em_andamento" &&
+        estado.fase ===
+          "pergunta" &&
+        atual &&
+        estado.iniciada_em
+      ) {
+        const restante =
+          atual.tempo_segundos *
+            1000 -
+          (
+            Date.now() -
+            new Date(
+              estado.iniciada_em
+            ).getTime()
+          );
+
+        if (restante <= 0) {
+          await revelarResposta();
+        }
+      }
+
+      const secaoRanking =
+        obterElemento(
+          "secaoRankingAdmin"
+        );
+
+      if (
+        estado.status ===
+        "finalizado"
+      ) {
+        secaoRanking.classList.remove(
+          "oculto"
+        );
+
+        if (
+          !rankingFinalExibido
+        ) {
+          rankingFinalExibido =
+            true;
+
+          await carregarRankingAdmin();
+        }
+      } else if (
+        !rankingFinalExibido
+      ) {
+        secaoRanking.classList.add(
+          "oculto"
+        );
+      }
+
+      carregandoEstado =
+        false;
+    }
+
+    async function iniciarQuiz() {
+      await carregarPerguntas();
+
+      const ativas =
+        perguntas.filter(
+          function (pergunta) {
+            return pergunta.ativa;
+          }
+        );
+
+      if (!ativas.length) {
+        mostrarMensagem(
+          obterElemento(
+            "mensagemApp"
+          ),
+          "Cadastre ao menos uma pergunta ativa.",
+          "erro"
+        );
+
+        return;
+      }
+
+      await clienteSupabase
+        .from(
+          "quiz_respostas"
+        )
+        .delete()
+        .neq(
+          "id",
+          0
+        );
+
+      const { error } =
+        await clienteSupabase
+          .from(
+            "quiz_estado"
+          )
+          .update({
+            status:
+              "em_andamento",
+
+            fase:
+              "pergunta",
+
+            pergunta_atual_id:
+              ativas[0].id,
+
+            iniciada_em:
+              new Date()
+                .toISOString(),
+
+            revelada_em:
+              null,
+
+            atualizado_em:
+              new Date()
+                .toISOString()
+          })
+          .eq(
+            "id",
+            1
+          );
+
+      if (error) {
+        mostrarMensagem(
+          obterElemento(
+            "mensagemApp"
+          ),
+          error.message,
+          "erro"
+        );
+
+        return;
+      }
+
+      await carregarEstado();
+    }
+
+    async function revelarOuAvancar() {
+      if (
+        !estado ||
+        estado.status !==
+          "em_andamento"
+      ) {
+        return;
+      }
+
+      if (
+        estado.fase ===
+        "pergunta"
+      ) {
+        await revelarResposta();
+      } else if (
+        estado.fase ===
+        "resposta"
+      ) {
+        await avancarPergunta();
+      }
+    }
+
+    async function revelarResposta() {
+      const { error } =
+        await clienteSupabase
+          .from(
+            "quiz_estado"
+          )
+          .update({
+            fase:
+              "resposta",
+
+            revelada_em:
+              new Date()
+                .toISOString(),
+
+            atualizado_em:
+              new Date()
+                .toISOString()
+          })
+          .eq(
+            "id",
+            1
+          );
+
+      if (error) {
+        mostrarMensagem(
+          obterElemento(
+            "mensagemApp"
+          ),
+          error.message,
+          "erro"
+        );
+
+        return;
+      }
+
+      await carregarEstado();
+    }
+
+    async function avancarPergunta() {
+      await carregarPerguntas();
+
+      const ativas =
+        perguntas.filter(
+          function (pergunta) {
+            return pergunta.ativa;
+          }
+        );
+
+      let indice =
+        ativas.findIndex(
+          function (pergunta) {
+            return pergunta.id ===
+              estado?.pergunta_atual_id;
+          }
+        );
+
+      indice +=
+        1;
+
+      if (
+        indice >=
+        ativas.length
+      ) {
+        await finalizarQuiz();
+        return;
+      }
+
+      await clienteSupabase
+        .from(
+          "quiz_estado"
+        )
+        .update({
+          status:
+            "em_andamento",
+
+          fase:
+            "pergunta",
+
+          pergunta_atual_id:
+            ativas[indice].id,
+
+          iniciada_em:
+            new Date()
+              .toISOString(),
+
+          revelada_em:
+            null,
+
+          atualizado_em:
+            new Date()
+              .toISOString()
+        })
+        .eq(
+          "id",
+          1
+        );
+
+      await carregarEstado();
+    }
+
+    async function voltarPergunta() {
+      await carregarPerguntas();
+
+      const ativas =
+        perguntas.filter(
+          function (pergunta) {
+            return pergunta.ativa;
+          }
+        );
+
+      let indice =
+        ativas.findIndex(
+          function (pergunta) {
+            return pergunta.id ===
+              estado?.pergunta_atual_id;
+          }
+        );
+
+      indice =
+        Math.max(
+          0,
+          indice - 1
+        );
+
+      await clienteSupabase
+        .from(
+          "quiz_estado"
+        )
+        .update({
+          status:
+            "em_andamento",
+
+          fase:
+            "pergunta",
+
+          pergunta_atual_id:
+            ativas[indice].id,
+
+          iniciada_em:
+            new Date()
+              .toISOString(),
+
+          revelada_em:
+            null,
+
+          atualizado_em:
+            new Date()
+              .toISOString()
+        })
+        .eq(
+          "id",
+          1
+        );
+
+      await carregarEstado();
+    }
+
+    async function finalizarQuiz() {
+      rankingFinalExibido =
+        true;
+
+      obterElemento(
+        "secaoRankingAdmin"
+      ).classList.remove(
+        "oculto"
+      );
+
+      await clienteSupabase
+        .from(
+          "quiz_estado"
+        )
+        .update({
+          status:
+            "finalizado",
+
+          fase:
+            "final",
+
+          pergunta_atual_id:
+            null,
+
+          iniciada_em:
+            null,
+
+          revelada_em:
+            null,
+
+          atualizado_em:
+            new Date()
+              .toISOString()
+        })
+        .eq(
+          "id",
+          1
+        );
+
+      await carregarEstado();
+      await carregarRankingAdmin();
+    }
+
+    async function reiniciarSala() {
+      const confirmou =
+        window.confirm(
+          "Isso apagará participantes e respostas. Deseja continuar?"
+        );
+
+      if (!confirmou) {
+        return;
+      }
+
+      await clienteSupabase
+        .from(
+          "quiz_respostas"
+        )
+        .delete()
+        .neq(
+          "id",
+          0
+        );
+
+      await clienteSupabase
+        .from(
+          "quiz_participantes"
+        )
+        .delete()
+        .not(
+          "id",
+          "is",
+          null
+        );
+
+      await clienteSupabase
+        .from(
+          "quiz_estado"
+        )
+        .update({
+          status:
+            "aguardando",
+
+          fase:
+            "espera",
+
+          pergunta_atual_id:
+            null,
+
+          iniciada_em:
+            null,
+
+          revelada_em:
+            null,
+
+          atualizado_em:
+            new Date()
+              .toISOString()
+        })
+        .eq(
+          "id",
+          1
+        );
+
+      await carregarParticipantes();
+      await carregarEstado();
+
+      rankingFinalExibido =
+        false;
+
+      assinaturaRanking =
+        "";
+
+      obterElemento(
+        "rankingAdmin"
+      ).innerHTML =
+        "";
+
+      obterElemento(
+        "secaoRankingAdmin"
+      ).classList.add(
+        "oculto"
+      );
+
+      mostrarMensagem(
+        obterElemento(
+          "mensagemApp"
+        ),
+        "Sala reiniciada. Os participantes precisarão digitar o nome novamente.",
+        "sucesso"
+      );
+    }
+
+    async function carregarRankingAdmin() {
+      const lista =
+        obterElemento(
+          "rankingAdmin"
+        );
+
+      const mensagem =
+        obterElemento(
+          "mensagemRankingAdmin"
+        );
+
+      const { data, error } =
+        await clienteSupabase.rpc(
+          "obter_ranking_quiz"
+        );
+
+      if (error) {
+        mostrarMensagem(
+          mensagem,
+          error.message,
+          "erro"
+        );
+
+        return;
+      }
+
+      const ranking =
+        data || [];
+
+      const novaAssinatura =
+        JSON.stringify(
+          ranking.map(
+            function (resultado) {
+              return {
+                id:
+                  resultado.participante_id,
+
+                nome:
+                  resultado.nome,
+
+                pontos:
+                  resultado.pontos,
+
+                acertos:
+                  resultado.acertos
+              };
+            }
+          )
+        );
+
+      if (
+        novaAssinatura ===
+        assinaturaRanking
+      ) {
+        return;
+      }
+
+      assinaturaRanking =
+        novaAssinatura;
+
+      mensagem.textContent =
+        "";
+
+      mensagem.className =
+        "mensagem";
+
+      const fragmento =
+        document.createDocumentFragment();
+
+      if (!ranking.length) {
+        const vazio =
+          document.createElement(
+            "p"
+          );
+
+        vazio.className =
+          "meta";
+
+        vazio.textContent =
+          "Nenhum resultado registrado.";
+
+        fragmento.appendChild(
+          vazio
+        );
+      } else {
+        ranking.forEach(
+          function (
+            resultado,
+            indice
+          ) {
+            const linha =
+              document.createElement(
+                "article"
+              );
+
+            linha.className =
+              "linha-ranking-admin";
+
+            linha.innerHTML =
+              `
+                <span class="posicao-ranking-admin">
+                  ${indice + 1}
+                </span>
+
+                <span class="nome-ranking-admin"></span>
+
+                <span class="pontos-ranking-admin">
+                  ${resultado.pontos} pts
+                </span>
+
+                <span class="dados-ranking-admin">
+                  ${resultado.acertos} acertos
+                </span>
+              `;
+
+            linha.querySelector(
+              ".nome-ranking-admin"
+            ).textContent =
+              resultado.nome;
+
+            fragmento.appendChild(
+              linha
+            );
+          }
+        );
+      }
+
+      lista.replaceChildren(
+        fragmento
+      );
+    }
+
+    function mostrarMensagem(
+      elemento,
+      texto,
+      tipo
+    ) {
+      elemento.textContent =
+        texto;
+
+      elemento.className =
+        `mensagem ${tipo}`;
+    }
+  </script>
+</body>
+</html>

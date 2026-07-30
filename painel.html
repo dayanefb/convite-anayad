@@ -280,7 +280,7 @@
     .barra {
       padding: 17px;
       display: grid;
-      grid-template-columns: 1fr auto auto;
+      grid-template-columns: minmax(220px, 1fr) minmax(170px, auto) auto auto;
       gap: 10px;
       border-bottom: 1px solid rgba(123, 30, 79, 0.11);
     }
@@ -288,6 +288,24 @@
     .busca {
       min-height: 46px;
       border-radius: 999px;
+    }
+
+    .filtro-select {
+      min-height: 46px;
+      padding: 11px 38px 11px 14px;
+      color: var(--texto);
+      background: var(--branco);
+      border: 1px solid rgba(123, 30, 79, 0.23);
+      border-radius: 999px;
+      outline: none;
+      font-size: 0.74rem;
+      font-weight: 500;
+      cursor: pointer;
+    }
+
+    .filtro-select:focus {
+      border-color: var(--rosa-escuro);
+      box-shadow: 0 0 0 3px rgba(123, 30, 79, 0.1);
     }
 
     .tabela-container {
@@ -383,7 +401,31 @@
         border-radius: 155px 155px 20px 20px;
       }
     }
-  </style>
+  
+  /* Modo incorporado: a central já realizou o login */
+  .modo-incorporado #telaLogin,
+  .modo-incorporado #login,
+  .modo-incorporado .tela-login,
+  .modo-incorporado .login {
+    display: none !important;
+  }
+
+  .modo-incorporado body {
+    background: transparent !important;
+  }
+
+  .modo-incorporado .app,
+  .modo-incorporado #app,
+  .modo-incorporado #painel {
+    min-height: 100vh;
+  }
+
+</style>
+<script>
+    if (new URLSearchParams(window.location.search).get("embed") === "1") {
+      document.documentElement.classList.add("modo-incorporado");
+    }
+  </script>
 </head>
 
 <body>
@@ -443,7 +485,7 @@
       <header class="cabecalho">
         <div>
           <h1>Painel de confirmações</h1>
-          <p>Aniversário da Anayad · 30 de agosto de 2026</p>
+          <p>Aniversário da Anayad · 23 de agosto de 2026</p>
         </div>
 
         <div class="acoes">
@@ -493,6 +535,16 @@
             placeholder="Pesquisar convidado"
           >
 
+          <select
+            id="filtroPresenca"
+            class="filtro-select"
+            aria-label="Filtrar por confirmação"
+          >
+            <option value="todos">Todas as respostas</option>
+            <option value="sim">Quem vai</option>
+            <option value="nao">Quem não vai</option>
+          </select>
+
           <button
             type="button"
             id="botaoAtualizar"
@@ -541,6 +593,9 @@
       SUBSTITUA APENAS OS DOIS VALORES ABAIXO.
       Eles devem ser exatamente os mesmos usados no confirmar.html.
     */
+    const MODO_INCORPORADO =
+      new URLSearchParams(window.location.search).get("embed") === "1";
+
     const SUPABASE_URL =
       "https://ywkgwctaaipwcyohomdj.supabase.co";
 
@@ -557,6 +612,7 @@
     const botaoAtualizar = document.getElementById("botaoAtualizar");
     const botaoCsv = document.getElementById("botaoCsv");
     const campoBusca = document.getElementById("campoBusca");
+    const filtroPresenca = document.getElementById("filtroPresenca");
     const corpoTabela = document.getElementById("corpoTabela");
     const estadoVazio = document.getElementById("estadoVazio");
     const quantidadeExibida = document.getElementById("quantidadeExibida");
@@ -579,15 +635,6 @@
     iniciar();
 
     async function iniciar() {
-      if (
-        SUPABASE_URL.includes("https://ywkgwctaaipwcyohomdj.supabase.co") ||
-        SUPABASE_KEY.includes("sb_publishable_zLcSs35Cps1zW0ncBW5qxw_zv-c3Ekt")
-      ) {
-        mostrarErroLogin(
-          "Preencha a Project URL e a Publishable key dentro do painel.html."
-        );
-        return;
-      }
 
       if (!clienteSupabase) {
         return;
@@ -680,6 +727,11 @@
       renderizarTabela
     );
 
+    filtroPresenca.addEventListener(
+      "change",
+      renderizarTabela
+    );
+
     botaoCsv.addEventListener(
       "click",
       baixarCsv
@@ -753,10 +805,19 @@
         .trim()
         .toLocaleLowerCase("pt-BR");
 
+      const filtroSelecionado =
+        filtroPresenca.value;
+
       const filtradas = confirmacoes.filter(function (item) {
-        return String(item.nome || "")
+        const correspondeAoNome = String(item.nome || "")
           .toLocaleLowerCase("pt-BR")
           .includes(termo);
+
+        const correspondeAoFiltro =
+          filtroSelecionado === "todos" ||
+          item.presenca === filtroSelecionado;
+
+        return correspondeAoNome && correspondeAoFiltro;
       });
 
       corpoTabela.innerHTML = "";
@@ -828,16 +889,35 @@
     }
 
     function baixarCsv() {
-      if (confirmacoes.length === 0) {
+      const termo = campoBusca.value
+        .trim()
+        .toLocaleLowerCase("pt-BR");
+
+      const filtroSelecionado =
+        filtroPresenca.value;
+
+      const dadosFiltrados = confirmacoes.filter(function (item) {
+        const correspondeAoNome = String(item.nome || "")
+          .toLocaleLowerCase("pt-BR")
+          .includes(termo);
+
+        const correspondeAoFiltro =
+          filtroSelecionado === "todos" ||
+          item.presenca === filtroSelecionado;
+
+        return correspondeAoNome && correspondeAoFiltro;
+      });
+
+      if (dadosFiltrados.length === 0) {
         mostrarErroPainel(
-          "Não há respostas para baixar."
+          "Não há respostas nesse filtro para baixar."
         );
         return;
       }
 
       const linhas = [
         ["ID", "Nome", "Resposta", "Data"],
-        ...confirmacoes.map(function (item) {
+        ...dadosFiltrados.map(function (item) {
           return [
             item.id,
             item.nome,
@@ -900,6 +980,40 @@
       mensagemPainel.textContent = "";
       mensagemPainel.className = "mensagem";
     }
+  
+    /*
+      Usa a sessão já criada em administracao.html.
+    */
+    async function abrirModoIncorporado() {
+      if (!MODO_INCORPORADO || !clienteSupabase) {
+        return;
+      }
+
+      const { data, error } =
+        await clienteSupabase.auth.getSession();
+
+      if (error) {
+        console.error("Erro ao recuperar sessão:", error);
+        return;
+      }
+
+      if (data.session) {
+        abrirPainel();
+        await carregarConfirmacoes();
+      }
+    }
+
+    clienteSupabase.auth.onAuthStateChange(
+      async function (_evento, sessao) {
+        if (MODO_INCORPORADO && sessao) {
+          abrirPainel();
+          await carregarConfirmacoes();
+        }
+      }
+    );
+
+    abrirModoIncorporado();
+
   </script>
 </body>
 </html>
