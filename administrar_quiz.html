@@ -392,6 +392,41 @@
       white-space: nowrap;
     }
 
+
+    .configuracao-modo {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 16px;
+    }
+
+    .opcao-modo {
+      padding: 16px;
+      background: #ffffff;
+      border: 1px solid rgba(123, 30, 79, 0.15);
+      border-radius: 14px;
+      cursor: pointer;
+    }
+
+    .opcao-modo input {
+      margin-right: 8px;
+    }
+
+    .opcao-modo strong {
+      color: var(--vinho);
+    }
+
+    .opcao-modo p {
+      margin-top: 7px;
+      color: var(--texto-suave);
+      font-size: 0.66rem;
+      line-height: 1.5;
+    }
+
+    .painel-controle-sala.oculto {
+      display: none !important;
+    }
+
     @media (max-width: 900px) {
       .grade {
         grid-template-columns: 1fr;
@@ -531,6 +566,90 @@
     </section>
 
     <section class="cartao">
+      <h2>Forma do quiz</h2>
+
+      <p class="meta">
+        Escolha como os participantes irão jogar.
+      </p>
+
+      <div class="configuracao-modo">
+        <label class="opcao-modo">
+          <input
+            type="radio"
+            name="modoQuiz"
+            value="sala"
+            id="modoSala"
+          >
+
+          <strong>Com sala de espera</strong>
+
+          <p>
+            Todos entram, aguardam e você controla cada pergunta.
+          </p>
+        </label>
+
+        <label class="opcao-modo">
+          <input
+            type="radio"
+            name="modoQuiz"
+            value="individual"
+            id="modoIndividual"
+          >
+
+          <strong>Começar imediatamente</strong>
+
+          <p>
+            Cada pessoa começa ao colocar o nome e avança após responder.
+          </p>
+        </label>
+      </div>
+
+      <div class="campo">
+        <label for="mostrarRankingDurante">
+          Ranking no modo imediato
+        </label>
+
+        <select id="mostrarRankingDurante">
+          <option value="true">
+            Mostrar e atualizar durante o quiz
+          </option>
+
+          <option value="false">
+            Mostrar apenas quando a pessoa terminar
+          </option>
+        </select>
+      </div>
+
+      <div class="campo">
+        <label for="segundosRespostaCorreta">
+          Tempo para mostrar a resposta correta
+        </label>
+
+        <input
+          id="segundosRespostaCorreta"
+          type="number"
+          min="1"
+          max="10"
+          value="2"
+        >
+      </div>
+
+      <button
+        class="botao principal"
+        id="salvarConfiguracao"
+        type="button"
+        style="margin-top: 16px;"
+      >
+        Salvar forma do quiz
+      </button>
+    </section>
+
+    <div
+      class="painel-controle-sala"
+      id="painelControleSala"
+    >
+
+    <section class="cartao">
       <h2>Sala de espera</h2>
 
       <p
@@ -545,6 +664,7 @@
         id="participantesAdmin"
       ></div>
     </section>
+    </div>
 
     <section
       class="cartao oculto"
@@ -775,6 +895,18 @@
     let assinaturaRanking =
       "";
 
+    let configuracaoQuiz =
+      {
+        modo:
+          "sala",
+
+        mostrar_ranking_durante:
+          true,
+
+        segundos_resposta_correta:
+          2
+      };
+
     obterElemento("entrar")
       .addEventListener(
         "click",
@@ -852,6 +984,13 @@
         "change",
         visualizarImagem
       );
+
+    obterElemento(
+      "salvarConfiguracao"
+    ).addEventListener(
+      "click",
+      salvarConfiguracaoQuiz
+    );
 
     iniciarPagina();
 
@@ -931,6 +1070,7 @@
 
       limparFormulario();
 
+      await carregarConfiguracaoQuiz();
       await carregarPerguntas();
       await carregarEstado();
       await carregarParticipantes();
@@ -944,6 +1084,179 @@
             },
             1500
           );
+      }
+    }
+
+    async function carregarConfiguracaoQuiz() {
+      const { data, error } =
+        await clienteSupabase
+          .from(
+            "quiz_configuracao"
+          )
+          .select("*")
+          .eq(
+            "id",
+            1
+          )
+          .single();
+
+      if (error) {
+        mostrarMensagem(
+          obterElemento(
+            "mensagemApp"
+          ),
+          error.message,
+          "erro"
+        );
+
+        return;
+      }
+
+      configuracaoQuiz =
+        data;
+
+      obterElemento(
+        configuracaoQuiz.modo ===
+          "sala"
+          ? "modoSala"
+          : "modoIndividual"
+      ).checked =
+        true;
+
+      obterElemento(
+        "mostrarRankingDurante"
+      ).value =
+        String(
+          configuracaoQuiz
+            .mostrar_ranking_durante
+        );
+
+      obterElemento(
+        "segundosRespostaCorreta"
+      ).value =
+        configuracaoQuiz
+          .segundos_resposta_correta;
+
+      atualizarInterfaceModo();
+    }
+
+    async function salvarConfiguracaoQuiz() {
+      const modoSelecionado =
+        document.querySelector(
+          'input[name="modoQuiz"]:checked'
+        )?.value;
+
+      if (!modoSelecionado) {
+        mostrarMensagem(
+          obterElemento(
+            "mensagemApp"
+          ),
+          "Escolha uma forma para o quiz.",
+          "erro"
+        );
+
+        return;
+      }
+
+      const registro = {
+        modo:
+          modoSelecionado,
+
+        mostrar_ranking_durante:
+          obterElemento(
+            "mostrarRankingDurante"
+          ).value === "true",
+
+        segundos_resposta_correta:
+          Number(
+            obterElemento(
+              "segundosRespostaCorreta"
+            ).value
+          ),
+
+        atualizado_em:
+          new Date()
+            .toISOString()
+      };
+
+      const { data, error } =
+        await clienteSupabase
+          .from(
+            "quiz_configuracao"
+          )
+          .update(registro)
+          .eq(
+            "id",
+            1
+          )
+          .select("*")
+          .single();
+
+      if (error) {
+        mostrarMensagem(
+          obterElemento(
+            "mensagemApp"
+          ),
+          error.message,
+          "erro"
+        );
+
+        return;
+      }
+
+      configuracaoQuiz =
+        data;
+
+      atualizarInterfaceModo();
+
+      mostrarMensagem(
+        obterElemento(
+          "mensagemApp"
+        ),
+        modoSelecionado === "sala"
+          ? "Quiz configurado com sala de espera."
+          : "Quiz configurado para começar imediatamente.",
+        "sucesso"
+      );
+    }
+
+    function atualizarInterfaceModo() {
+      const modoSala =
+        configuracaoQuiz.modo ===
+        "sala";
+
+      obterElemento(
+        "painelControleSala"
+      ).classList.toggle(
+        "oculto",
+        !modoSala
+      );
+
+      obterElemento(
+        "iniciarQuiz"
+      ).disabled =
+        !modoSala;
+
+      obterElemento(
+        "botaoRespostaProxima"
+      ).disabled =
+        !modoSala;
+
+      obterElemento(
+        "anterior"
+      ).disabled =
+        !modoSala;
+
+      obterElemento(
+        "finalizar"
+      ).disabled =
+        !modoSala;
+
+      if (!modoSala) {
+        obterElemento(
+          "statusQuiz"
+        ).textContent =
+          "Modo individual · ranking ao vivo";
       }
     }
 
@@ -1643,6 +1956,14 @@
     }
 
     async function carregarEstado() {
+      if (
+        configuracaoQuiz.modo ===
+        "individual"
+      ) {
+        await carregarRankingAdmin();
+        return;
+      }
+
       if (carregandoEstado) {
         return;
       }
@@ -1757,6 +2078,15 @@
         );
 
       if (
+        configuracaoQuiz.modo ===
+          "individual"
+      ) {
+        secaoRanking.classList.remove(
+          "oculto"
+        );
+
+        await carregarRankingAdmin();
+      } else if (
         estado.status ===
         "finalizado"
       ) {
@@ -2087,65 +2417,29 @@
     async function reiniciarSala() {
       const confirmou =
         window.confirm(
-          "Isso apagará participantes e respostas. Deseja continuar?"
+          "Isso apagará participantes, respostas e progresso. Deseja continuar?"
         );
 
       if (!confirmou) {
         return;
       }
 
-      await clienteSupabase
-        .from(
-          "quiz_respostas"
-        )
-        .delete()
-        .neq(
-          "id",
-          0
+      const { error } =
+        await clienteSupabase.rpc(
+          "reiniciar_quiz_completo"
         );
 
-      await clienteSupabase
-        .from(
-          "quiz_participantes"
-        )
-        .delete()
-        .not(
-          "id",
-          "is",
-          null
+      if (error) {
+        mostrarMensagem(
+          obterElemento(
+            "mensagemApp"
+          ),
+          error.message,
+          "erro"
         );
 
-      await clienteSupabase
-        .from(
-          "quiz_estado"
-        )
-        .update({
-          status:
-            "aguardando",
-
-          fase:
-            "espera",
-
-          pergunta_atual_id:
-            null,
-
-          iniciada_em:
-            null,
-
-          revelada_em:
-            null,
-
-          atualizado_em:
-            new Date()
-              .toISOString()
-        })
-        .eq(
-          "id",
-          1
-        );
-
-      await carregarParticipantes();
-      await carregarEstado();
+        return;
+      }
 
       rankingFinalExibido =
         false;
@@ -2164,11 +2458,14 @@
         "oculto"
       );
 
+      await carregarParticipantes();
+      await carregarEstado();
+
       mostrarMensagem(
         obterElemento(
           "mensagemApp"
         ),
-        "Sala reiniciada. Os participantes precisarão digitar o nome novamente.",
+        "Quiz reiniciado. Os participantes deverão colocar o nome novamente.",
         "sucesso"
       );
     }
