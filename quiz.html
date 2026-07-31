@@ -2,22 +2,12 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1"
-  >
+  <meta name="viewport" content="width=device-width, initial-scale=1">
 
   <title>Quiz da Anayad</title>
 
-  <link
-    rel="preconnect"
-    href="https://fonts.googleapis.com"
-  >
-  <link
-    rel="preconnect"
-    href="https://fonts.gstatic.com"
-    crossorigin
-  >
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link
     href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Montserrat:wght@300;400;500;600&display=swap"
     rel="stylesheet"
@@ -98,9 +88,7 @@
     .cabecalho {
       margin-bottom: 18px;
       padding: 44px 24px 32px;
-
       text-align: center;
-
       border-radius: 150px 150px 24px 24px;
     }
 
@@ -109,11 +97,13 @@
       border-radius: 20px;
     }
 
+    .cartao + .cartao {
+      margin-top: 18px;
+    }
+
     .estrelas {
       margin-bottom: 12px;
-
       color: var(--rosa);
-
       letter-spacing: 8px;
     }
 
@@ -135,9 +125,7 @@
 
     .subtitulo {
       margin: 12px auto;
-
       color: var(--texto-suave);
-
       font-size: 0.77rem;
       line-height: 1.7;
     }
@@ -154,9 +142,7 @@
     .campo label {
       display: block;
       margin-bottom: 8px;
-
       color: var(--vinho-escuro);
-
       font-size: 0.68rem;
       font-weight: 600;
       text-transform: uppercase;
@@ -166,16 +152,9 @@
       width: 100%;
       min-height: 50px;
       padding: 13px;
-
       border: 1px solid rgba(123, 30, 79, 0.23);
       border-radius: 10px;
-
       outline: none;
-    }
-
-    .campo input:focus {
-      border-color: var(--vinho);
-      box-shadow: 0 0 0 3px rgba(123, 30, 79, 0.08);
     }
 
     .botao {
@@ -183,77 +162,44 @@
       min-height: 48px;
       margin-top: 16px;
       padding: 12px;
-
       color: #ffffff;
       background: var(--vinho);
-
       border: 1px solid var(--vinho);
       border-radius: 999px;
-
       font-weight: 600;
       text-transform: uppercase;
     }
 
-    .sala-topo {
-      margin-bottom: 18px;
-      text-align: center;
-    }
-
     .participantes {
       display: grid;
-      grid-template-columns: repeat(
-        auto-fit,
-        minmax(150px, 1fr)
-      );
+      grid-template-columns: repeat(auto-fit, minmax(145px, 1fr));
       gap: 10px;
       margin-top: 18px;
     }
 
     .participante {
       padding: 12px 14px;
-
       display: flex;
       align-items: center;
       gap: 9px;
-
       background: #ffffff;
-
       border: 1px solid rgba(123, 30, 79, 0.13);
       border-radius: 13px;
-
       font-size: 0.72rem;
       font-weight: 600;
     }
 
     .participante::before {
       content: "";
-
       width: 9px;
       height: 9px;
-
       flex: 0 0 auto;
-
       background: var(--verde);
       border-radius: 50%;
     }
 
-    .contador-participantes {
-      display: inline-flex;
-      margin-top: 10px;
-      padding: 7px 12px;
-
-      color: var(--vinho);
-      background: var(--rosa-claro);
-
-      border-radius: 999px;
-
-      font-size: 0.65rem;
-      font-weight: 600;
-    }
-
     .topo-pergunta {
       margin-bottom: 18px;
-
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -263,12 +209,9 @@
     .tempo {
       min-width: 78px;
       padding: 9px 14px;
-
       color: var(--vinho);
       background: var(--rosa-claro);
-
       border-radius: 999px;
-
       font-family: "Cormorant Garamond", serif;
       font-size: 1.35rem;
       font-weight: 700;
@@ -279,11 +222,8 @@
       width: 100%;
       max-height: 360px;
       margin-bottom: 18px;
-
       object-fit: contain;
-
       background: #ffffff;
-
       border-radius: 14px;
     }
 
@@ -294,7 +234,6 @@
 
     .alternativas {
       margin-top: 20px;
-
       display: grid;
       gap: 11px;
     }
@@ -302,24 +241,11 @@
     .alternativa {
       min-height: 56px;
       padding: 13px 15px;
-
       color: var(--texto);
       background: #ffffff;
-
       border: 1px solid rgba(123, 30, 79, 0.18);
       border-radius: 13px;
-
       text-align: left;
-
-      transition:
-        transform 0.18s ease,
-        border-color 0.18s ease,
-        background-color 0.18s ease;
-    }
-
-    .alternativa:hover:not(:disabled) {
-      transform: translateY(-1px);
-      border-color: rgba(123, 30, 79, 0.42);
     }
 
     .alternativa.marcada {
@@ -340,35 +266,23 @@
       border-color: var(--erro);
     }
 
-    .resposta-revelada {
+    .resposta {
       margin-top: 16px;
       padding: 16px;
-
       color: var(--verde);
       background: #e9f6f1;
-
       border-radius: 13px;
-
       font-size: 0.76rem;
       font-weight: 600;
       line-height: 1.55;
       text-align: center;
     }
 
-    .pontuacao-recebida {
-      display: block;
-      margin-top: 5px;
-
-      color: var(--vinho);
-    }
-
     .mensagem {
       display: none;
       margin-top: 14px;
       padding: 13px;
-
       border-radius: 9px;
-
       font-size: 0.72rem;
       line-height: 1.55;
     }
@@ -388,23 +302,16 @@
     .ranking {
       display: grid;
       gap: 9px;
-      margin-top: 18px;
+      margin-top: 16px;
     }
 
     .linha-ranking {
       padding: 13px 15px;
-
       display: grid;
-      grid-template-columns:
-        44px
-        minmax(0, 1fr)
-        auto
-        auto;
+      grid-template-columns: 44px minmax(0, 1fr) auto auto;
       gap: 10px;
       align-items: center;
-
       background: #ffffff;
-
       border: 1px solid rgba(123, 30, 79, 0.12);
       border-radius: 13px;
     }
@@ -412,21 +319,12 @@
     .posicao {
       width: 34px;
       height: 34px;
-
       display: grid;
       place-items: center;
-
       color: var(--vinho);
       background: var(--rosa-claro);
-
       border-radius: 50%;
-
       font-weight: 700;
-    }
-
-    .linha-ranking:first-child {
-      border-color: rgba(184, 132, 32, 0.4);
-      box-shadow: 0 8px 20px rgba(184, 132, 32, 0.12);
     }
 
     .linha-ranking:first-child .posicao {
@@ -436,27 +334,23 @@
 
     .nome-ranking {
       min-width: 0;
-
       font-size: 0.75rem;
       font-weight: 600;
-
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
     }
 
-    .dados-ranking {
-      color: var(--texto-suave);
-
-      font-size: 0.64rem;
+    .pontos-ranking {
+      color: var(--vinho);
+      font-size: 0.72rem;
+      font-weight: 700;
       white-space: nowrap;
     }
 
-    .pontos-ranking {
-      color: var(--vinho);
-
-      font-size: 0.72rem;
-      font-weight: 700;
+    .dados-ranking {
+      color: var(--texto-suave);
+      font-size: 0.64rem;
       white-space: nowrap;
     }
 
@@ -470,10 +364,7 @@
       }
 
       .linha-ranking {
-        grid-template-columns:
-          38px
-          minmax(0, 1fr)
-          auto;
+        grid-template-columns: 38px minmax(0, 1fr) auto;
       }
 
       .dados-ranking {
@@ -487,28 +378,17 @@
   <main class="pagina">
     <section class="cabecalho">
       <div class="estrelas">✦ ✷ ✦</div>
-
       <h1>Quiz da Anayad</h1>
-
-      <p class="subtitulo">
-        Responda rápido para ganhar mais pontos.
-        Cada pergunta vale de 1 a 5 pontos.
+      <p class="subtitulo" id="descricaoModo">
+        Digite seu nome para participar.
       </p>
     </section>
 
-    <section
-      class="cartao centralizado"
-      id="telaNome"
-    >
-      <h2>Entrar na sala</h2>
-
-      <p class="subtitulo">
-        Digite seu nome para participar.
-      </p>
+    <section class="cartao centralizado" id="telaNome">
+      <h2>Participar</h2>
 
       <div class="campo">
         <label for="nome">Seu nome</label>
-
         <input
           id="nome"
           maxlength="100"
@@ -517,109 +397,44 @@
         >
       </div>
 
-      <button
-        class="botao"
-        id="entrar"
-        type="button"
-      >
+      <button class="botao" id="entrar" type="button">
         Entrar no quiz
       </button>
 
-      <p
-        class="mensagem"
-        id="mensagemNome"
-      ></p>
+      <p class="mensagem" id="mensagemNome"></p>
     </section>
 
-    <section
-      class="cartao oculto"
-      id="telaSala"
-    >
-      <div class="sala-topo">
-        <h2>Sala de espera</h2>
-
-        <p class="subtitulo">
-          Aguarde a organização iniciar o quiz.
-        </p>
-
-        <span
-          class="contador-participantes"
-          id="contadorParticipantes"
-        >
-          0 participantes
-        </span>
-      </div>
-
-      <div
-        class="participantes"
-        id="listaParticipantes"
-      ></div>
+    <section class="cartao centralizado oculto" id="telaSala">
+      <h2>Sala de espera</h2>
+      <p class="subtitulo">Aguarde a organização iniciar.</p>
+      <div class="participantes" id="listaParticipantes"></div>
     </section>
 
-    <section
-      class="cartao oculto"
-      id="telaPergunta"
-    >
+    <section class="cartao oculto" id="telaPergunta">
       <div class="topo-pergunta">
-        <span
-          class="subtitulo"
-          id="statusPergunta"
-        ></span>
-
-        <span
-          class="tempo"
-          id="tempo"
-        >
-          00
-        </span>
+        <span class="subtitulo" id="statusPergunta"></span>
+        <span class="tempo" id="tempo">00</span>
       </div>
 
-      <img
-        class="imagem-pergunta oculto"
-        id="imagemPergunta"
-        alt=""
-      >
-
-      <h2
-        class="pergunta"
-        id="pergunta"
-      ></h2>
-
-      <div
-        class="alternativas"
-        id="alternativas"
-      ></div>
-
-      <p
-        class="mensagem"
-        id="mensagemPergunta"
-      ></p>
-
-      <div
-        class="resposta-revelada oculto"
-        id="respostaRevelada"
-      ></div>
+      <img class="imagem-pergunta oculto" id="imagemPergunta" alt="">
+      <h2 class="pergunta" id="pergunta"></h2>
+      <div class="alternativas" id="alternativas"></div>
+      <p class="mensagem" id="mensagemPergunta"></p>
+      <div class="resposta oculto" id="respostaCorreta"></div>
     </section>
 
-    <section
-      class="cartao centralizado oculto"
-      id="telaFim"
-    >
-      <h2>Quiz finalizado</h2>
+    <section class="cartao centralizado oculto" id="telaFim">
+      <h2>Você terminou!</h2>
+      <p class="subtitulo">Confira sua posição no ranking.</p>
+    </section>
 
+    <section class="cartao oculto" id="secaoRanking">
+      <h2>Ranking</h2>
       <p class="subtitulo">
-        Confira o resultado final.
+        A classificação é atualizada conforme as respostas chegam.
       </p>
-
-      <div
-        class="ranking"
-        id="ranking"
-      ></div>
-
-      <p
-        class="mensagem"
-        id="mensagemRanking"
-      ></p>
+      <div class="ranking" id="ranking"></div>
+      <p class="mensagem" id="mensagemRanking"></p>
     </section>
   </main>
 
@@ -630,34 +445,41 @@
     const SUPABASE_KEY =
       "sb_publishable_zLcSs35Cps1zW0ncBW5qxw_zv-c3Ekt";
 
-    const clienteSupabase =
+    const sb =
       window.supabase.createClient(
         SUPABASE_URL,
         SUPABASE_KEY
       );
 
-    const obterElemento =
+    const $ =
       (id) =>
         document.getElementById(id);
+
+    let configuracao =
+      {
+        modo:
+          "sala",
+
+        mostrar_ranking_durante:
+          true,
+
+        segundos_resposta_correta:
+          2
+      };
 
     let participanteId =
       localStorage.getItem(
         "quiz_participante_id"
       ) || "";
 
-    let participanteNome =
-      localStorage.getItem(
-        "quiz_participante_nome"
-      ) || "";
+    let perguntaAtual =
+      null;
 
     let perguntaAtualId =
       null;
 
-    let perguntaAtual =
-      null;
-
     let inicioPergunta =
-      0;
+      null;
 
     let respondeu =
       false;
@@ -668,18 +490,28 @@
     let pontosRecebidos =
       null;
 
-    let faseAtual =
+    let faseSala =
       "";
 
-    obterElemento("entrar")
+    let avancando =
+      false;
+
+    $("entrar")
       .addEventListener(
         "click",
-        entrarNaSala
+        entrar
       );
 
+    iniciar();
+
     setInterval(
-      sincronizarQuiz,
+      sincronizar,
       700
+    );
+
+    setInterval(
+      carregarRanking,
+      2000
     );
 
     setInterval(
@@ -687,104 +519,84 @@
       2000
     );
 
-    iniciarParticipante();
+    async function iniciar() {
+      await carregarConfiguracao();
 
-    async function iniciarParticipante() {
       if (!participanteId) {
         mostrarTelaNome();
         return;
       }
 
-      const participanteValido =
-        await validarParticipanteSalvo();
+      const valido =
+        await participanteExiste();
 
-      if (!participanteValido) {
-        limparParticipanteLocal();
+      if (!valido) {
+        limparParticipante();
         mostrarTelaNome();
         return;
       }
 
-      obterElemento("telaNome")
-        .classList.add("oculto");
+      $("telaNome")
+        .classList.add(
+          "oculto"
+        );
 
-      mostrarTela("sala");
-
-      await sincronizarQuiz();
-      await carregarParticipantes();
+      await sincronizar();
     }
 
-    async function validarParticipanteSalvo() {
+    async function carregarConfiguracao() {
       const { data, error } =
-        await clienteSupabase.rpc(
+        await sb.rpc(
+          "obter_configuracao_quiz"
+        );
+
+      if (
+        error ||
+        !data ||
+        !data.length
+      ) {
+        return;
+      }
+
+      configuracao =
+        data[0];
+
+      $("descricaoModo")
+        .textContent =
+          configuracao.modo ===
+          "sala"
+            ? "Entre na sala e aguarde a organização iniciar."
+            : "Entre e comece imediatamente. O ranking muda a cada resposta.";
+    }
+
+    async function participanteExiste() {
+      const { data } =
+        await sb.rpc(
           "obter_participantes_sala"
         );
 
-      if (error) {
-        console.error(
-          "Erro ao validar participante:",
-          error
+      return (data || [])
+        .some(
+          (participante) =>
+            participante.id ===
+            participanteId
         );
-
-        return false;
-      }
-
-      return (data || []).some(
-        function (participante) {
-          return participante.id ===
-            participanteId;
-        }
-      );
     }
 
-    function limparParticipanteLocal() {
-      participanteId =
-        "";
-
-      participanteNome =
-        "";
-
-      localStorage.removeItem(
-        "quiz_participante_id"
-      );
-
-      localStorage.removeItem(
-        "quiz_participante_nome"
-      );
-    }
-
-    function mostrarTelaNome() {
-      [
-        "telaSala",
-        "telaPergunta",
-        "telaFim"
-      ].forEach(
-        function (id) {
-          obterElemento(id)
-            .classList.add("oculto");
-        }
-      );
-
-      obterElemento("telaNome")
-        .classList.remove("oculto");
-
-      obterElemento("nome")
-        .focus();
-    }
-
-    async function entrarNaSala() {
+    async function entrar() {
       const nome =
-        obterElemento("nome")
+        $("nome")
           .value
           .trim();
 
       limparMensagem(
-        obterElemento("mensagemNome")
+        $("mensagemNome")
       );
 
       if (nome.length < 2) {
-        mostrarMensagem(
-          obterElemento("mensagemNome"),
-          "Digite seu nome para entrar.",
+        mensagem(
+          $("mensagemNome"),
+          "Digite seu nome.",
           "erro"
         );
 
@@ -792,8 +604,8 @@
       }
 
       const { data, error } =
-        await clienteSupabase.rpc(
-          "entrar_sala_quiz",
+        await sb.rpc(
+          "entrar_quiz",
           {
             p_nome:
               nome
@@ -805,10 +617,10 @@
         !data ||
         !data.length
       ) {
-        mostrarMensagem(
-          obterElemento("mensagemNome"),
+        mensagem(
+          $("mensagemNome"),
           error?.message ||
-            "Não foi possível entrar na sala.",
+            "Não foi possível entrar.",
           "erro"
         );
 
@@ -816,41 +628,128 @@
       }
 
       participanteId =
-        data[0].id;
-
-      participanteNome =
-        data[0].nome;
+        data[0].participante_id;
 
       localStorage.setItem(
         "quiz_participante_id",
         participanteId
       );
 
-      localStorage.setItem(
-        "quiz_participante_nome",
-        participanteNome
-      );
+      $("telaNome")
+        .classList.add(
+          "oculto"
+        );
 
-      obterElemento("telaNome")
-        .classList.add("oculto");
-
-      mostrarTela("sala");
-
-      await carregarParticipantes();
-      await sincronizarQuiz();
+      await carregarConfiguracao();
+      await sincronizar();
     }
 
-    async function sincronizarQuiz() {
+    async function sincronizar() {
       if (!participanteId) {
         return;
       }
 
-      await clienteSupabase.rpc(
+      await carregarConfiguracao();
+
+      if (
+        configuracao.modo ===
+        "individual"
+      ) {
+        await sincronizarIndividual();
+      } else {
+        await sincronizarSala();
+      }
+
+      if (
+        configuracao.modo ===
+          "individual" &&
+        configuracao
+          .mostrar_ranking_durante
+      ) {
+        $("secaoRanking")
+          .classList.remove(
+            "oculto"
+          );
+      }
+    }
+
+    async function sincronizarIndividual() {
+      const { data, error } =
+        await sb.rpc(
+          "obter_situacao_participante",
+          {
+            p_participante_id:
+              participanteId
+          }
+        );
+
+      if (
+        error ||
+        !data ||
+        !data.length
+      ) {
+        return;
+      }
+
+      const situacao =
+        data[0];
+
+      if (
+        situacao.finalizado
+      ) {
+        mostrarTela("fim");
+
+        $("secaoRanking")
+          .classList.remove(
+            "oculto"
+          );
+
+        await carregarRanking();
+        return;
+      }
+
+      if (
+        situacao.pergunta_atual_id &&
+        perguntaAtualId !==
+          situacao.pergunta_atual_id &&
+        !avancando
+      ) {
+        perguntaAtualId =
+          situacao.pergunta_atual_id;
+
+        inicioPergunta =
+          new Date(
+            situacao.iniciada_em
+          ).getTime();
+
+        respondeu =
+          false;
+
+        alternativaEscolhida =
+          null;
+
+        pontosRecebidos =
+          null;
+
+        await carregarPergunta(
+          perguntaAtualId
+        );
+      }
+
+      mostrarTela(
+        "pergunta"
+      );
+
+      atualizarCronometroIndividual();
+    }
+
+    async function sincronizarSala() {
+      await sb.rpc(
         "atualizar_estado_por_tempo"
       );
 
       const { data, error } =
-        await clienteSupabase.rpc(
+        await sb.rpc(
           "obter_estado_quiz"
         );
 
@@ -865,21 +764,8 @@
       const estado =
         data[0];
 
-      faseAtual =
+      faseSala =
         estado.fase;
-
-      if (
-        estado.status ===
-        "finalizado"
-      ) {
-        perguntaAtualId =
-          null;
-
-        mostrarTela("fim");
-
-        await carregarRanking();
-        return;
-      }
 
       if (
         estado.status ===
@@ -889,135 +775,80 @@
           null;
 
         mostrarTela("sala");
+        await carregarParticipantes();
         return;
       }
 
       if (
         estado.status ===
-          "em_andamento" &&
-        estado.pergunta_atual_id
+        "finalizado"
       ) {
-        if (
-          perguntaAtualId !==
-          estado.pergunta_atual_id
-        ) {
-          perguntaAtualId =
-            estado.pergunta_atual_id;
+        mostrarTela("fim");
 
-          inicioPergunta =
-            new Date(
-              estado.iniciada_em
-            ).getTime();
-
-          respondeu =
-            false;
-
-          alternativaEscolhida =
-            null;
-
-          pontosRecebidos =
-            null;
-
-          await carregarPergunta(
-            perguntaAtualId
+        $("secaoRanking")
+          .classList.remove(
+            "oculto"
           );
-        }
 
-        mostrarTela("pergunta");
-
-        if (
-          estado.fase ===
-          "pergunta"
-        ) {
-          atualizarCronometro(
-            estado
-          );
-        }
-
-        if (
-          estado.fase ===
-          "resposta"
-        ) {
-          await revelarResposta();
-        }
-      }
-    }
-
-    async function carregarParticipantes() {
-      if (!participanteId) {
+        await carregarRanking();
         return;
       }
-
-      const { data, error } =
-        await clienteSupabase.rpc(
-          "obter_participantes_sala"
-        );
-
-      if (error) {
-        return;
-      }
-
-      const participantes =
-        data || [];
 
       if (
-        participanteId &&
-        !participantes.some(
-          function (participante) {
-            return participante.id ===
-              participanteId;
-          }
-        )
+        estado.pergunta_atual_id &&
+        perguntaAtualId !==
+          estado.pergunta_atual_id
       ) {
-        limparParticipanteLocal();
-        mostrarTelaNome();
-        return;
+        perguntaAtualId =
+          estado.pergunta_atual_id;
+
+        inicioPergunta =
+          new Date(
+            estado.iniciada_em
+          ).getTime();
+
+        respondeu =
+          false;
+
+        alternativaEscolhida =
+          null;
+
+        pontosRecebidos =
+          null;
+
+        await carregarPergunta(
+          perguntaAtualId
+        );
       }
 
-      const lista =
-        obterElemento(
-          "listaParticipantes"
+      mostrarTela("pergunta");
+
+      if (
+        estado.fase ===
+        "pergunta"
+      ) {
+        atualizarCronometroSala(
+          estado
         );
+      }
 
-      lista.innerHTML =
-        "";
-
-      participantes.forEach(
-        function (participante) {
-          const item =
-            document.createElement(
-              "div"
-            );
-
-          item.className =
-            "participante";
-
-          item.textContent =
-            participante.nome;
-
-          lista.appendChild(
-            item
-          );
-        }
-      );
-
-      obterElemento(
-        "contadorParticipantes"
-      ).textContent =
-        `${participantes.length} ${
-          participantes.length === 1
-            ? "participante"
-            : "participantes"
-        }`;
+      if (
+        estado.fase ===
+        "resposta"
+      ) {
+        await revelarRespostaSala();
+      }
     }
 
-    async function carregarPergunta(id) {
+    async function carregarPergunta(
+      perguntaId
+    ) {
       const { data, error } =
-        await clienteSupabase.rpc(
+        await sb.rpc(
           "obter_pergunta_publica",
           {
             p_pergunta_id:
-              id
+              perguntaId
           }
         );
 
@@ -1032,20 +863,16 @@
       perguntaAtual =
         data[0];
 
-      obterElemento(
-        "pergunta"
-      ).textContent =
-        perguntaAtual.pergunta;
+      $("pergunta")
+        .textContent =
+          perguntaAtual.pergunta;
 
-      obterElemento(
-        "statusPergunta"
-      ).textContent =
-        `Esta pergunta vale até 5 pontos`;
+      $("statusPergunta")
+        .textContent =
+          "Vale até 5 pontos";
 
       const imagem =
-        obterElemento(
-          "imagemPergunta"
-        );
+        $("imagemPergunta");
 
       if (
         perguntaAtual.imagem_url
@@ -1062,113 +889,74 @@
         );
       }
 
-      const listaAlternativas =
-        obterElemento(
-          "alternativas"
-        );
+      const alternativas =
+        $("alternativas");
 
-      listaAlternativas.innerHTML =
+      alternativas.innerHTML =
         "";
 
-      perguntaAtual.alternativas.forEach(
-        function (
-          texto,
-          indice
-        ) {
-          const botao =
-            document.createElement(
-              "button"
+      perguntaAtual.alternativas
+        .forEach(
+          function (
+            texto,
+            indice
+          ) {
+            const botao =
+              document.createElement(
+                "button"
+              );
+
+            botao.className =
+              "alternativa";
+
+            botao.type =
+              "button";
+
+            botao.dataset.indice =
+              indice;
+
+            botao.textContent =
+              texto;
+
+            botao.addEventListener(
+              "click",
+              function () {
+                responder(
+                  indice,
+                  botao
+                );
+              }
             );
 
-          botao.type =
-            "button";
+            alternativas.appendChild(
+              botao
+            );
+          }
+        );
 
-          botao.className =
-            "alternativa";
-
-          botao.dataset.indice =
-            indice;
-
-          botao.textContent =
-            texto;
-
-          botao.addEventListener(
-            "click",
-            function () {
-              responderPergunta(
-                indice,
-                botao
-              );
-            }
-          );
-
-          listaAlternativas
-            .appendChild(botao);
-        }
-      );
-
-      obterElemento(
-        "respostaRevelada"
-      ).classList.add(
-        "oculto"
-      );
+      $("respostaCorreta")
+        .classList.add(
+          "oculto"
+        );
 
       limparMensagem(
-        obterElemento(
-          "mensagemPergunta"
-        )
+        $("mensagemPergunta")
       );
     }
 
-    function atualizarCronometro(
-      estado
-    ) {
-      if (!perguntaAtual) {
-        return;
-      }
-
-      const inicio =
-        new Date(
-          estado.iniciada_em
-        ).getTime();
-
-      const decorrido =
-        Math.floor(
-          (
-            Date.now() -
-            inicio
-          ) / 1000
-        );
-
-      const restante =
-        Math.max(
-          0,
-          perguntaAtual.tempo_segundos -
-            decorrido
-        );
-
-      obterElemento(
-        "tempo"
-      ).textContent =
-        String(restante).padStart(
-          2,
-          "0"
-        );
-
-      if (
-        restante <= 0
-      ) {
-        bloquearAlternativas();
-      }
-    }
-
-    async function responderPergunta(
+    async function responder(
       indice,
       botao
     ) {
+      if (respondeu) {
+        return;
+      }
+
       if (
-        respondeu ||
-        faseAtual !== "pergunta"
+        configuracao.modo ===
+          "sala" &&
+        faseSala !==
+          "pergunta"
       ) {
         return;
       }
@@ -1185,9 +973,29 @@
         "marcada"
       );
 
+      if (
+        configuracao.modo ===
+        "individual"
+      ) {
+        await responderIndividual(
+          indice
+        );
+      } else {
+        await responderSala(
+          indice
+        );
+      }
+    }
+
+    async function responderIndividual(
+      indice
+    ) {
+      avancando =
+        true;
+
       const { data, error } =
-        await clienteSupabase.rpc(
-          "responder_quiz",
+        await sb.rpc(
+          "responder_quiz_individual",
           {
             p_participante_id:
               participanteId,
@@ -1205,37 +1013,93 @@
         !data ||
         !data.length
       ) {
-        const detalhe =
-          error?.message || "";
+        avancando =
+          false;
 
-        if (
-          detalhe.includes(
-            "quiz_respostas_participante_id_fkey"
-          ) ||
-          detalhe.includes(
-            "Participante inválido"
-          )
-        ) {
-          limparParticipanteLocal();
-          mostrarTelaNome();
+        mensagem(
+          $("mensagemPergunta"),
+          error?.message ||
+            "Não foi possível salvar.",
+          "erro"
+        );
 
-          mostrarMensagem(
-            obterElemento(
-              "mensagemNome"
-            ),
-            "Sua entrada anterior foi reiniciada. Digite seu nome novamente para entrar na sala.",
-            "erro"
-          );
+        return;
+      }
 
-          return;
-        }
+      const resposta =
+        data[0];
 
-        mostrarMensagem(
-          obterElemento(
-            "mensagemPergunta"
-          ),
-          detalhe ||
-            "Não foi possível salvar a resposta.",
+      pontosRecebidos =
+        resposta.pontos;
+
+      mostrarRespostaLocal(
+        resposta.correta,
+        resposta.alternativa_correta,
+        resposta.acertou,
+        resposta.pontos
+      );
+
+      await carregarRanking();
+
+      setTimeout(
+        async function () {
+          perguntaAtualId =
+            null;
+
+          perguntaAtual =
+            null;
+
+          avancando =
+            false;
+
+          if (
+            resposta.finalizado
+          ) {
+            mostrarTela("fim");
+
+            $("secaoRanking")
+              .classList.remove(
+                "oculto"
+              );
+
+            await carregarRanking();
+          } else {
+            await sincronizarIndividual();
+          }
+        },
+        configuracao
+          .segundos_resposta_correta *
+          1000
+      );
+    }
+
+    async function responderSala(
+      indice
+    ) {
+      const { data, error } =
+        await sb.rpc(
+          "responder_quiz_ao_vivo",
+          {
+            p_participante_id:
+              participanteId,
+
+            p_pergunta_id:
+              perguntaAtualId,
+
+            p_alternativa_indice:
+              indice
+          }
+        );
+
+      if (
+        error ||
+        !data ||
+        !data.length
+      ) {
+        mensagem(
+          $("mensagemPergunta"),
+          error?.message ||
+            "Não foi possível salvar.",
           "erro"
         );
 
@@ -1245,44 +1109,21 @@
       pontosRecebidos =
         data[0].pontos;
 
-      mostrarMensagem(
-        obterElemento(
-          "mensagemPergunta"
-        ),
-        `Resposta registrada. Você recebeu ${pontosRecebidos} ${
-          pontosRecebidos === 1
-            ? "ponto"
-            : "pontos"
-        }.`,
+      mensagem(
+        $("mensagemPergunta"),
+        `Resposta registrada: ${pontosRecebidos} pontos.`,
         data[0].acertou
           ? "sucesso"
           : "erro"
       );
     }
 
-    async function revelarResposta() {
-      bloquearAlternativas();
-
-      const { data, error } =
-        await clienteSupabase.rpc(
-          "obter_resposta_correta",
-          {
-            p_pergunta_id:
-              perguntaAtualId
-          }
-        );
-
-      if (
-        error ||
-        !data ||
-        !data.length
-      ) {
-        return;
-      }
-
-      const resposta =
-        data[0];
-
+    function mostrarRespostaLocal(
+      correta,
+      textoCorreto,
+      acertou,
+      pontos
+    ) {
       document
         .querySelectorAll(
           ".alternativa"
@@ -1294,21 +1135,16 @@
                 botao.dataset.indice
               );
 
-            botao.classList.remove(
-              "correta",
-              "errada"
-            );
-
             if (
               indice ===
-              resposta.correta
+              correta
             ) {
               botao.classList.add(
                 "correta"
               );
             } else if (
-              alternativaEscolhida ===
-              indice
+              indice ===
+              alternativaEscolhida
             ) {
               botao.classList.add(
                 "errada"
@@ -1318,55 +1154,159 @@
         );
 
       const area =
-        obterElemento(
-          "respostaRevelada"
-        );
+        $("respostaCorreta");
 
       area.innerHTML =
         `Resposta correta: <strong>${escaparHtml(
-          resposta.alternativa_texto
-        )}</strong>`;
-
-      if (
-        pontosRecebidos !== null
-      ) {
-        area.innerHTML +=
-          `<span class="pontuacao-recebida">Você recebeu ${pontosRecebidos} ${
-            pontosRecebidos === 1
-              ? "ponto"
-              : "pontos"
-          }.</span>`;
-      }
+          textoCorreto
+        )}</strong><br>${acertou
+          ? `Você ganhou ${pontos} pontos.`
+          : "Você não ganhou pontos nesta pergunta."
+        }`;
 
       area.classList.remove(
         "oculto"
       );
-
-      obterElemento(
-        "tempo"
-      ).textContent =
-        "00";
     }
 
-    async function carregarRanking() {
-      const { data, error } =
-        await clienteSupabase.rpc(
-          "obter_ranking_quiz"
+    async function revelarRespostaSala() {
+      bloquearAlternativas();
+
+      const { data } =
+        await sb.rpc(
+          "obter_resposta_correta",
+          {
+            p_pergunta_id:
+              perguntaAtualId
+          }
+        );
+
+      if (
+        !data ||
+        !data.length
+      ) {
+        return;
+      }
+
+      mostrarRespostaLocal(
+        data[0].correta,
+        data[0].alternativa_texto,
+        alternativaEscolhida ===
+          data[0].correta,
+        pontosRecebidos || 0
+      );
+    }
+
+    function atualizarCronometroIndividual() {
+      if (
+        !perguntaAtual ||
+        !inicioPergunta
+      ) {
+        return;
+      }
+
+      const restante =
+        Math.max(
+          0,
+          perguntaAtual.tempo_segundos -
+          Math.floor(
+            (
+              Date.now() -
+              inicioPergunta
+            ) / 1000
+          )
+        );
+
+      $("tempo")
+        .textContent =
+          String(restante)
+            .padStart(
+              2,
+              "0"
+            );
+    }
+
+    function atualizarCronometroSala(
+      estado
+    ) {
+      inicioPergunta =
+        new Date(
+          estado.iniciada_em
+        ).getTime();
+
+      atualizarCronometroIndividual();
+    }
+
+    async function carregarParticipantes() {
+      if (
+        configuracao.modo !==
+        "sala"
+      ) {
+        return;
+      }
+
+      const { data } =
+        await sb.rpc(
+          "obter_participantes_sala"
         );
 
       const lista =
-        obterElemento(
-          "ranking"
-        );
+        $("listaParticipantes");
 
       lista.innerHTML =
         "";
 
+      (data || [])
+        .forEach(
+          function (
+            participante
+          ) {
+            const item =
+              document.createElement(
+                "div"
+              );
+
+            item.className =
+              "participante";
+
+            item.textContent =
+              participante.nome;
+
+            lista.appendChild(
+              item
+            );
+          }
+        );
+    }
+
+    async function carregarRanking() {
+      const deveMostrar =
+        configuracao.modo ===
+          "individual"
+          ? configuracao
+              .mostrar_ranking_durante
+          : !$("telaFim")
+              .classList.contains(
+                "oculto"
+              );
+
+      if (!deveMostrar) {
+        $("secaoRanking")
+          .classList.add(
+            "oculto"
+          );
+
+        return;
+      }
+
+      const { data, error } =
+        await sb.rpc(
+          "obter_ranking_quiz"
+        );
+
       if (error) {
-        mostrarMensagem(
-          obterElemento(
-            "mensagemRanking"
-          ),
+        mensagem(
+          $("mensagemRanking"),
           error.message,
           "erro"
         );
@@ -1375,55 +1315,61 @@
       }
 
       const ranking =
-        data || [];
+        $("ranking");
 
-      if (!ranking.length) {
-        lista.innerHTML =
-          '<p class="subtitulo">Nenhum resultado registrado.</p>';
+      const fragmento =
+        document.createDocumentFragment();
 
-        return;
-      }
+      (data || [])
+        .forEach(
+          function (
+            resultado,
+            indice
+          ) {
+            const linha =
+              document.createElement(
+                "article"
+              );
 
-      ranking.forEach(
-        function (
-          resultado,
-          indice
-        ) {
-          const linha =
-            document.createElement(
-              "article"
+            linha.className =
+              "linha-ranking";
+
+            linha.innerHTML =
+              `
+                <span class="posicao">
+                  ${indice + 1}
+                </span>
+
+                <span class="nome-ranking"></span>
+
+                <span class="pontos-ranking">
+                  ${resultado.pontos} pts
+                </span>
+
+                <span class="dados-ranking">
+                  ${resultado.acertos} acertos
+                </span>
+              `;
+
+            linha.querySelector(
+              ".nome-ranking"
+            ).textContent =
+              resultado.nome;
+
+            fragmento.appendChild(
+              linha
             );
+          }
+        );
 
-          linha.className =
-            "linha-ranking";
-
-          linha.innerHTML =
-            `
-              <span class="posicao">
-                ${indice + 1}
-              </span>
-
-              <span class="nome-ranking"></span>
-
-              <span class="pontos-ranking">
-                ${resultado.pontos} pts
-              </span>
-
-              <span class="dados-ranking">
-                ${resultado.acertos} acertos
-              </span>
-            `;
-
-          linha.querySelector(
-            ".nome-ranking"
-          ).textContent =
-            resultado.nome;
-
-          lista.appendChild(
-            linha
-          );
-        }
+      ranking.replaceChildren(
+        fragmento
       );
+
+      $("secaoRanking")
+        .classList.remove(
+          "oculto"
+        );
     }
 
     function bloquearAlternativas() {
@@ -1439,14 +1385,16 @@
         );
     }
 
-    function mostrarTela(tipo) {
+    function mostrarTela(
+      tipo
+    ) {
       [
         "telaSala",
         "telaPergunta",
         "telaFim"
       ].forEach(
         function (id) {
-          obterElemento(id)
+          $(id)
             .classList.add(
               "oculto"
             );
@@ -1454,31 +1402,58 @@
       );
 
       if (tipo === "sala") {
-        obterElemento(
-          "telaSala"
-        ).classList.remove(
-          "oculto"
-        );
+        $("telaSala")
+          .classList.remove(
+            "oculto"
+          );
       }
 
       if (tipo === "pergunta") {
-        obterElemento(
-          "telaPergunta"
-        ).classList.remove(
-          "oculto"
-        );
+        $("telaPergunta")
+          .classList.remove(
+            "oculto"
+          );
       }
 
       if (tipo === "fim") {
-        obterElemento(
-          "telaFim"
-        ).classList.remove(
-          "oculto"
-        );
+        $("telaFim")
+          .classList.remove(
+            "oculto"
+          );
       }
     }
 
-    function mostrarMensagem(
+    function mostrarTelaNome() {
+      [
+        "telaSala",
+        "telaPergunta",
+        "telaFim",
+        "secaoRanking"
+      ].forEach(
+        function (id) {
+          $(id)
+            .classList.add(
+              "oculto"
+            );
+        }
+      );
+
+      $("telaNome")
+        .classList.remove(
+          "oculto"
+        );
+    }
+
+    function limparParticipante() {
+      participanteId =
+        "";
+
+      localStorage.removeItem(
+        "quiz_participante_id"
+      );
+    }
+
+    function mensagem(
       elemento,
       texto,
       tipo
@@ -1500,16 +1475,18 @@
         "mensagem";
     }
 
-    function escaparHtml(texto) {
-      const elemento =
+    function escaparHtml(
+      texto
+    ) {
+      const div =
         document.createElement(
           "div"
         );
 
-      elemento.textContent =
+      div.textContent =
         texto;
 
-      return elemento.innerHTML;
+      return div.innerHTML;
     }
   </script>
 </body>
