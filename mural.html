@@ -579,6 +579,331 @@
       background: var(--rosa-claro);
     }
 
+
+    .foto {
+      cursor: pointer;
+
+      transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease,
+        border-color 0.2s ease;
+    }
+
+    .foto:hover {
+      transform: translateY(-3px);
+
+      border-color: rgba(123, 30, 79, 0.3);
+
+      box-shadow:
+        0 14px 30px rgba(74, 28, 49, 0.12);
+    }
+
+    .foto img {
+      transition: transform 0.25s ease;
+    }
+
+    .foto:hover img {
+      transform: scale(1.02);
+    }
+
+    .foto:focus-visible {
+      outline: 3px solid rgba(123, 30, 79, 0.24);
+      outline-offset: 3px;
+    }
+
+    .modal-foto {
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+
+      padding: 18px;
+
+      display: grid;
+      place-items: center;
+
+      background: rgba(45, 17, 31, 0.78);
+
+      backdrop-filter: blur(7px);
+      -webkit-backdrop-filter: blur(7px);
+    }
+
+    .modal-conteudo {
+      width: min(940px, 100%);
+      max-height: calc(100vh - 36px);
+
+      display: grid;
+      grid-template-columns: minmax(0, 1.35fr) minmax(280px, 0.65fr);
+      overflow: hidden;
+
+      background: var(--creme);
+
+      border: 1px solid rgba(255, 255, 255, 0.35);
+      border-radius: 24px;
+
+      box-shadow:
+        0 24px 70px rgba(0, 0, 0, 0.28);
+    }
+
+    .modal-imagem-area {
+      min-height: 420px;
+
+      display: grid;
+      place-items: center;
+      overflow: hidden;
+
+      background:
+        linear-gradient(
+          135deg,
+          rgba(123, 30, 79, 0.08),
+          rgba(168, 67, 115, 0.16)
+        );
+    }
+
+    .modal-imagem {
+      width: 100%;
+      height: 100%;
+      max-height: calc(100vh - 36px);
+
+      display: block;
+      object-fit: contain;
+    }
+
+    .modal-informacoes {
+      padding: 28px;
+
+      display: flex;
+      flex-direction: column;
+      overflow-y: auto;
+    }
+
+    .modal-fechar {
+      width: 42px;
+      height: 42px;
+      margin-left: auto;
+
+      display: grid;
+      place-items: center;
+
+      color: var(--vinho);
+      background: var(--rosa-claro);
+
+      border: 0;
+      border-radius: 50%;
+
+      font-size: 1.4rem;
+      line-height: 1;
+    }
+
+    .modal-fechar:hover {
+      background: #ead1df;
+    }
+
+    .modal-nome {
+      margin-top: 20px;
+
+      font-size: clamp(2rem, 5vw, 3rem);
+      line-height: 1;
+    }
+
+    .modal-recado {
+      margin-top: 14px;
+
+      color: var(--texto-suave);
+
+      font-size: 0.78rem;
+      line-height: 1.8;
+      white-space: pre-wrap;
+    }
+
+    .modal-data {
+      margin-top: 16px;
+
+      color: var(--texto-suave);
+
+      font-size: 0.62rem;
+    }
+
+    .modal-baixar {
+      width: 100%;
+      min-height: 48px;
+      margin-top: auto;
+      padding: 13px 18px;
+
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 9px;
+
+      color: #ffffff;
+      background: var(--vinho);
+
+      border: 1px solid var(--vinho);
+      border-radius: 999px;
+
+      font-size: 0.66rem;
+      font-weight: 600;
+      letter-spacing: 0.07em;
+      text-decoration: none;
+      text-transform: uppercase;
+    }
+
+    .modal-baixar:hover {
+      background: var(--vinho-escuro);
+    }
+
+    .modal-baixar:disabled {
+      opacity: 0.65;
+      cursor: wait;
+    }
+
+    .modal-dica {
+      margin-top: 10px;
+
+      color: var(--texto-suave);
+
+      font-size: 0.58rem;
+      line-height: 1.5;
+      text-align: center;
+    }
+
+    body.modal-aberto {
+      overflow: hidden;
+    }
+
+
+    .botao-adicionar-mobile,
+    .fundo-formulario-mobile,
+    .fechar-formulario-mobile {
+      display: none;
+    }
+
+    @media (max-width: 850px) {
+      .area-mural {
+        display: block;
+      }
+
+      .formulario {
+        position: fixed;
+        left: 10px;
+        right: 10px;
+        bottom: 10px;
+        z-index: 1001;
+        max-height: calc(100vh - 90px);
+        overflow-y: auto;
+        border-radius: 22px;
+        transform: translateY(calc(100% + 30px));
+        opacity: 0;
+        pointer-events: none;
+        transition: transform 0.28s ease, opacity 0.28s ease;
+      }
+
+      .formulario.formulario-mobile-aberto {
+        transform: translateY(0);
+        opacity: 1;
+        pointer-events: auto;
+      }
+
+      .fundo-formulario-mobile {
+        position: fixed;
+        inset: 0;
+        z-index: 1000;
+        display: block;
+        background: rgba(45, 17, 31, 0.54);
+        opacity: 0;
+        pointer-events: none;
+        backdrop-filter: blur(4px);
+        transition: opacity 0.25s ease;
+      }
+
+      .fundo-formulario-mobile.ativo {
+        opacity: 1;
+        pointer-events: auto;
+      }
+
+      .botao-adicionar-mobile {
+        position: fixed;
+        right: 18px;
+        bottom: 18px;
+        z-index: 999;
+        width: 58px;
+        height: 58px;
+        display: grid;
+        place-items: center;
+        color: #ffffff;
+        background: var(--vinho);
+        border: 0;
+        border-radius: 50%;
+        box-shadow: 0 12px 28px rgba(74, 28, 49, 0.28);
+        font-size: 2rem;
+        font-weight: 300;
+        line-height: 1;
+      }
+
+      .fechar-formulario-mobile {
+        width: 38px;
+        height: 38px;
+        display: grid;
+        place-items: center;
+        color: var(--vinho);
+        background: var(--rosa-claro);
+        border: 0;
+        border-radius: 50%;
+        font-size: 1.25rem;
+      }
+
+      .formulario-topo-mobile {
+        margin-bottom: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+      }
+
+      .grade {
+        grid-template-columns: 1fr;
+        padding-bottom: 90px;
+      }
+
+      body.formulario-mobile-aberto {
+        overflow: hidden;
+      }
+    }
+
+    @media (max-width: 760px) {
+      .modal-foto {
+        padding: 10px;
+      }
+
+      .modal-conteudo {
+        max-height: calc(100vh - 20px);
+
+        grid-template-columns: 1fr;
+        grid-template-rows: minmax(260px, 55vh) auto;
+
+        border-radius: 18px;
+      }
+
+      .modal-imagem-area {
+        min-height: 260px;
+      }
+
+      .modal-imagem {
+        max-height: 55vh;
+      }
+
+      .modal-informacoes {
+        padding: 20px;
+      }
+
+      .modal-nome {
+        margin-top: 14px;
+      }
+
+      .modal-baixar {
+        margin-top: 22px;
+      }
+    }
+
     @media (max-width: 520px) {
       .upload-foto {
         grid-template-columns: 42px minmax(0, 1fr);
@@ -676,8 +1001,19 @@
     </section>
 
     <section class="area-mural oculto" id="telaMural">
-      <section class="painel formulario">
-        <h2>Adicionar ao mural</h2>
+      <section class="painel formulario" id="formularioMural">
+        <div class="formulario-topo-mobile">
+          <h2>Adicionar ao mural</h2>
+
+          <button
+            class="fechar-formulario-mobile"
+            id="fecharFormularioMobile"
+            type="button"
+            aria-label="Fechar formulário"
+          >
+            ×
+          </button>
+        </div>
 
         <div class="preview" id="preview">
           A foto aparecerá aqui
@@ -767,6 +1103,76 @@
     </div>
   </main>
 
+  <button
+    class="botao-adicionar-mobile"
+    id="abrirFormularioMobile"
+    type="button"
+    aria-label="Adicionar foto ao mural"
+  >
+    +
+  </button>
+
+  <div
+    class="fundo-formulario-mobile"
+    id="fundoFormularioMobile"
+  ></div>
+
+  <section
+    class="modal-foto oculto"
+    id="modalFoto"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="modalNome"
+  >
+    <div class="modal-conteudo">
+      <div class="modal-imagem-area">
+        <img
+          class="modal-imagem"
+          id="modalImagem"
+          alt=""
+        >
+      </div>
+
+      <div class="modal-informacoes">
+        <button
+          class="modal-fechar"
+          id="modalFechar"
+          type="button"
+          aria-label="Fechar visualização"
+        >
+          ×
+        </button>
+
+        <h2
+          class="modal-nome"
+          id="modalNome"
+        ></h2>
+
+        <p
+          class="modal-recado"
+          id="modalRecado"
+        ></p>
+
+        <span
+          class="modal-data"
+          id="modalData"
+        ></span>
+
+        <button
+          class="modal-baixar"
+          id="modalBaixar"
+          type="button"
+        >
+          ↓ Baixar foto
+        </button>
+
+        <p class="modal-dica">
+          A foto será salva no dispositivo.
+        </p>
+      </div>
+    </div>
+  </section>
+
   <script>
     /*
       ============================================================
@@ -820,6 +1226,42 @@
     const botaoEnviar =
       document.getElementById("botaoEnviar");
 
+    const modalFoto =
+      document.getElementById("modalFoto");
+
+    const modalImagem =
+      document.getElementById("modalImagem");
+
+    const modalNome =
+      document.getElementById("modalNome");
+
+    const modalRecado =
+      document.getElementById("modalRecado");
+
+    const modalData =
+      document.getElementById("modalData");
+
+    const modalFechar =
+      document.getElementById("modalFechar");
+
+    const modalBaixar =
+      document.getElementById("modalBaixar");
+
+    const formularioMural =
+      document.getElementById("formularioMural");
+
+    const abrirFormularioMobile =
+      document.getElementById("abrirFormularioMobile");
+
+    const fecharFormularioMobile =
+      document.getElementById("fecharFormularioMobile");
+
+    const fundoFormularioMobile =
+      document.getElementById("fundoFormularioMobile");
+
+    let fotoAberta =
+      null;
+
     atualizarContagemRegressiva();
     verificarStatusDoMural();
 
@@ -831,6 +1273,57 @@
     setInterval(
       verificarStatusDoMural,
       5000
+    );
+
+    modalFechar.addEventListener(
+      "click",
+      fecharModalFoto
+    );
+
+    modalFoto.addEventListener(
+      "click",
+      function (evento) {
+        if (
+          evento.target ===
+          modalFoto
+        ) {
+          fecharModalFoto();
+        }
+      }
+    );
+
+    document.addEventListener(
+      "keydown",
+      function (evento) {
+        if (
+          evento.key === "Escape" &&
+          !modalFoto.classList.contains(
+            "oculto"
+          )
+        ) {
+          fecharModalFoto();
+        }
+      }
+    );
+
+    modalBaixar.addEventListener(
+      "click",
+      baixarFotoAberta
+    );
+
+    abrirFormularioMobile.addEventListener(
+      "click",
+      abrirFormularioDoMural
+    );
+
+    fecharFormularioMobile.addEventListener(
+      "click",
+      fecharFormularioDoMural
+    );
+
+    fundoFormularioMobile.addEventListener(
+      "click",
+      fecharFormularioDoMural
     );
 
     const uploadFoto =
@@ -1032,6 +1525,7 @@
           );
 
           await carregarFotos();
+          fecharFormularioDoMural();
         } catch (erro) {
           console.error(erro);
 
@@ -1240,6 +1734,46 @@
         card.className =
           "foto";
 
+        card.tabIndex =
+          0;
+
+        card.setAttribute(
+          "role",
+          "button"
+        );
+
+        card.setAttribute(
+          "aria-label",
+          `Abrir foto enviada por ${
+            foto.nome || "convidado"
+          }`
+        );
+
+        card.addEventListener(
+          "click",
+          function () {
+            abrirModalFoto(
+              foto
+            );
+          }
+        );
+
+        card.addEventListener(
+          "keydown",
+          function (evento) {
+            if (
+              evento.key === "Enter" ||
+              evento.key === " "
+            ) {
+              evento.preventDefault();
+
+              abrirModalFoto(
+                foto
+              );
+            }
+          }
+        );
+
         const imagem =
           document.createElement("img");
 
@@ -1300,6 +1834,267 @@
 
         grade.appendChild(card);
       });
+    }
+
+    function abrirFormularioDoMural() {
+      if (window.innerWidth > 850) {
+        return;
+      }
+
+      formularioMural.classList.add(
+        "formulario-mobile-aberto"
+      );
+
+      fundoFormularioMobile.classList.add(
+        "ativo"
+      );
+
+      document.body.classList.add(
+        "formulario-mobile-aberto"
+      );
+
+      setTimeout(
+        function () {
+          campoFoto.click();
+        },
+        180
+      );
+    }
+
+    function fecharFormularioDoMural() {
+      formularioMural.classList.remove(
+        "formulario-mobile-aberto"
+      );
+
+      fundoFormularioMobile.classList.remove(
+        "ativo"
+      );
+
+      document.body.classList.remove(
+        "formulario-mobile-aberto"
+      );
+    }
+
+    function abrirModalFoto(
+      foto
+    ) {
+      fotoAberta =
+        foto;
+
+      modalImagem.src =
+        foto.imagem_url;
+
+      modalImagem.alt =
+        foto.nome
+          ? `Foto enviada por ${foto.nome}`
+          : "Foto enviada ao mural";
+
+      modalNome.textContent =
+        foto.nome || "Convidado";
+
+      modalRecado.textContent =
+        foto.recado ||
+        "Um registro especial da festa.";
+
+      modalData.textContent =
+        new Intl.DateTimeFormat(
+          "pt-BR",
+          {
+            dateStyle:
+              "long",
+
+            timeStyle:
+              "short"
+          }
+        ).format(
+          new Date(
+            foto.criado_em
+          )
+        );
+
+      modalFoto.classList.remove(
+        "oculto"
+      );
+
+      document.body.classList.add(
+        "modal-aberto"
+      );
+
+      modalFechar.focus();
+    }
+
+    function fecharModalFoto() {
+      modalFoto.classList.add(
+        "oculto"
+      );
+
+      document.body.classList.remove(
+        "modal-aberto"
+      );
+
+      modalImagem.src =
+        "";
+
+      fotoAberta =
+        null;
+    }
+
+    async function baixarFotoAberta() {
+      if (
+        !fotoAberta ||
+        !fotoAberta.imagem_url
+      ) {
+        return;
+      }
+
+      const textoOriginal =
+        modalBaixar.textContent;
+
+      modalBaixar.disabled =
+        true;
+
+      modalBaixar.textContent =
+        "Preparando download...";
+
+      try {
+        const resposta =
+          await fetch(
+            fotoAberta.imagem_url,
+            {
+              cache:
+                "no-store"
+            }
+          );
+
+        if (!resposta.ok) {
+          throw new Error(
+            "Não foi possível carregar a imagem."
+          );
+        }
+
+        const arquivo =
+          await resposta.blob();
+
+        const urlTemporaria =
+          URL.createObjectURL(
+            arquivo
+          );
+
+        const link =
+          document.createElement(
+            "a"
+          );
+
+        const nomeSeguro =
+          (
+            fotoAberta.nome ||
+            "foto-mural"
+          )
+            .normalize("NFD")
+            .replace(
+              /[\u0300-\u036f]/g,
+              ""
+            )
+            .replace(
+              /[^a-zA-Z0-9-_]/g,
+              "-"
+            )
+            .replace(
+              /-+/g,
+              "-"
+            )
+            .replace(
+              /^-|-$/g,
+              ""
+            );
+
+        const extensao =
+          obterExtensaoFoto(
+            fotoAberta.imagem_url,
+            arquivo.type
+          );
+
+        link.href =
+          urlTemporaria;
+
+        link.download =
+          `${nomeSeguro || "foto-mural"}-${Date.now()}.${extensao}`;
+
+        document.body.appendChild(
+          link
+        );
+
+        link.click();
+        link.remove();
+
+        setTimeout(
+          function () {
+            URL.revokeObjectURL(
+              urlTemporaria
+            );
+          },
+          1000
+        );
+      } catch (erro) {
+        console.error(
+          "Erro ao baixar foto:",
+          erro
+        );
+
+        window.open(
+          fotoAberta.imagem_url,
+          "_blank",
+          "noopener,noreferrer"
+        );
+      } finally {
+        modalBaixar.disabled =
+          false;
+
+        modalBaixar.textContent =
+          textoOriginal;
+      }
+    }
+
+    function obterExtensaoFoto(
+      url,
+      tipo
+    ) {
+      const extensoesPorTipo = {
+        "image/jpeg":
+          "jpg",
+
+        "image/png":
+          "png",
+
+        "image/webp":
+          "webp"
+      };
+
+      if (
+        extensoesPorTipo[tipo]
+      ) {
+        return extensoesPorTipo[tipo];
+      }
+
+      const caminho =
+        url
+          .split("?")[0]
+          .split("#")[0];
+
+      const extensao =
+        caminho
+          .split(".")
+          .pop()
+          .toLowerCase();
+
+      return [
+        "jpg",
+        "jpeg",
+        "png",
+        "webp"
+      ].includes(extensao)
+        ? extensao
+        : "jpg";
     }
 
     function mostrarMensagem(texto, tipo) {
