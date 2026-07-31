@@ -632,8 +632,10 @@
       max-height: calc(100vh - 36px);
 
       display: grid;
-      grid-template-columns: minmax(0, 1.35fr) minmax(280px, 0.65fr);
-      overflow: hidden;
+      grid-template-columns:
+        minmax(0, 1.35fr)
+        minmax(280px, 0.65fr);
+      overflow: auto;
 
       background: var(--creme);
 
@@ -645,11 +647,12 @@
     }
 
     .modal-imagem-area {
-      min-height: 420px;
+      min-width: 0;
+      min-height: 0;
 
       display: grid;
       place-items: center;
-      overflow: hidden;
+      overflow: auto;
 
       background:
         linear-gradient(
@@ -660,8 +663,9 @@
     }
 
     .modal-imagem {
-      width: 100%;
-      height: 100%;
+      width: auto;
+      max-width: 100%;
+      height: auto;
       max-height: calc(100vh - 36px);
 
       display: block;
@@ -669,6 +673,7 @@
     }
 
     .modal-informacoes {
+      min-height: 0;
       padding: 28px;
 
       display: flex;
@@ -784,44 +789,68 @@
 
       .formulario {
         position: fixed;
-        left: 10px;
-        right: 10px;
-        bottom: 10px;
+        left: 50%;
+        top: 50%;
         z-index: 10001;
-        top: 74px;
-        max-height: calc(100vh - 84px);
-        overflow-y: auto;
-        border-radius: 22px;
-        transform: translateY(calc(100% + 30px));
-        opacity: 0;
-        pointer-events: none;
-        isolation: isolate;
-        touch-action: pan-y;
-        -webkit-overflow-scrolling: touch;
 
-        transition: transform 0.28s ease, opacity 0.28s ease;
+        width: calc(100% - 24px);
+        max-width: 430px;
+        max-height: calc(100vh - 32px);
+        margin: 0;
+        padding: 18px;
+        overflow-y: auto;
+
+        display: block;
+
+        border-radius: 22px;
+
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
+
+        transform:
+          translate(-50%, -46%)
+          scale(0.96);
+
+        transition:
+          opacity 0.22s ease,
+          transform 0.22s ease,
+          visibility 0.22s ease;
+
+        -webkit-overflow-scrolling: touch;
       }
 
       .formulario.formulario-mobile-aberto {
-        transform: translateY(0);
         opacity: 1;
+        visibility: visible;
         pointer-events: auto;
+
+        transform:
+          translate(-50%, -50%)
+          scale(1);
       }
 
       .fundo-formulario-mobile {
         position: fixed;
         inset: 0;
-        z-index: 9999;
+        z-index: 10000;
+
         display: block;
-        background: rgba(45, 17, 31, 0.54);
+
+        background: rgba(45, 17, 31, 0.28);
+
         opacity: 0;
+        visibility: hidden;
         pointer-events: none;
-        backdrop-filter: blur(4px);
-        transition: opacity 0.25s ease;
+
+        transition:
+          opacity 0.2s ease,
+          visibility 0.2s ease;
       }
 
       .fundo-formulario-mobile.ativo {
         opacity: 1;
+        visibility: visible;
         pointer-events: auto;
       }
 
@@ -830,15 +859,22 @@
         right: 18px;
         bottom: 18px;
         z-index: 999;
+
         width: 58px;
         height: 58px;
+
         display: grid;
         place-items: center;
+
         color: #ffffff;
         background: var(--vinho);
+
         border: 0;
         border-radius: 50%;
-        box-shadow: 0 12px 28px rgba(74, 28, 49, 0.28);
+
+        box-shadow:
+          0 12px 28px rgba(74, 28, 49, 0.28);
+
         font-size: 2rem;
         font-weight: 300;
         line-height: 1;
@@ -847,21 +883,36 @@
       .fechar-formulario-mobile {
         width: 38px;
         height: 38px;
+
         display: grid;
         place-items: center;
+
         color: var(--vinho);
         background: var(--rosa-claro);
+
         border: 0;
         border-radius: 50%;
+
         font-size: 1.25rem;
       }
 
       .formulario-topo-mobile {
-        margin-bottom: 10px;
+        position: sticky;
+        top: -18px;
+        z-index: 4;
+
+        margin: -18px -18px 12px;
+        padding: 18px;
+
         display: flex;
         align-items: center;
         justify-content: space-between;
         gap: 12px;
+
+        background: rgba(253, 251, 247, 0.98);
+
+        border-bottom:
+          1px solid rgba(123, 30, 79, 0.1);
       }
 
       .grade {
@@ -873,8 +924,6 @@
       .formulario textarea,
       .formulario button,
       .formulario label {
-        position: relative;
-        z-index: 2;
         pointer-events: auto;
       }
 
@@ -893,20 +942,30 @@
       }
 
       .modal-conteudo {
+        width: 100%;
         max-height: calc(100vh - 20px);
 
-        grid-template-columns: 1fr;
-        grid-template-rows: minmax(260px, 55vh) auto;
+        display: flex;
+        flex-direction: column;
+        overflow-y: auto;
 
         border-radius: 18px;
       }
 
       .modal-imagem-area {
-        min-height: 260px;
+        width: 100%;
+        min-height: 0;
+        max-height: none;
+        overflow: visible;
       }
 
       .modal-imagem {
-        max-height: 55vh;
+        width: 100%;
+        height: auto;
+        max-width: 100%;
+        max-height: 62vh;
+
+        object-fit: contain;
       }
 
       .modal-informacoes {
@@ -919,6 +978,11 @@
 
       .modal-baixar {
         margin-top: 22px;
+      }
+
+      .modal-informacoes {
+        flex: 0 0 auto;
+        overflow: visible;
       }
     }
 
@@ -969,6 +1033,118 @@
         grid-template-columns: repeat(2, minmax(0, 1fr));
       }
     }
+
+    @media (max-width: 850px) {
+      .area-mural {
+        display: flex !important;
+        flex-direction: column !important;
+      }
+
+      .area-mural > .painel:not(.formulario) {
+        order: 1;
+        width: 100%;
+      }
+
+      .formulario {
+        position: fixed !important;
+        left: 50% !important;
+        top: 50% !important;
+        right: auto !important;
+        bottom: auto !important;
+        z-index: 10001 !important;
+
+        order: 2;
+        width: calc(100% - 24px) !important;
+        max-width: 430px !important;
+        max-height: calc(100vh - 32px) !important;
+        margin: 0 !important;
+
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
+
+        transform:
+          translate(-50%, -46%)
+          scale(0.96) !important;
+      }
+
+      .formulario.formulario-mobile-aberto {
+        opacity: 1;
+        visibility: visible;
+        pointer-events: auto;
+
+        transform:
+          translate(-50%, -50%)
+          scale(1) !important;
+      }
+
+      .grade {
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+        gap: 12px;
+        padding-top: 12px;
+      }
+
+      .foto img {
+        aspect-ratio: 1 / 1;
+        object-fit: cover;
+      }
+
+      .foto-conteudo {
+        padding: 14px;
+      }
+
+      .foto-conteudo h3 {
+        font-size: 0.95rem;
+      }
+
+      .foto-conteudo p {
+        font-size: 0.68rem;
+        line-height: 1.45;
+      }
+
+      .foto-conteudo small {
+        font-size: 0.56rem;
+      }
+
+      .cabecalho {
+        margin-bottom: 12px;
+        padding: 32px 18px 24px;
+      }
+
+      .mural-topo {
+        padding: 16px 18px;
+      }
+    }
+
+
+    @media (max-width: 430px) {
+      .grade {
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+        gap: 10px;
+      }
+
+      .foto {
+        border-radius: 18px;
+        overflow: hidden;
+      }
+
+      .foto-conteudo {
+        padding: 12px;
+      }
+
+      .foto-conteudo h3 {
+        font-size: 0.86rem;
+      }
+
+      .foto-conteudo p {
+        font-size: 0.62rem;
+      }
+
+      .foto-conteudo small {
+        font-size: 0.52rem;
+      }
+    }
+
   </style>
 </head>
 
@@ -1332,7 +1508,14 @@
     abrirFormularioMobile.addEventListener(
       "click",
       function () {
-        campoFoto.click();
+        abrirFormularioDoMural();
+
+        setTimeout(
+          function () {
+            campoFoto.click();
+          },
+          180
+        );
       }
     );
 
@@ -1345,6 +1528,8 @@
       "click",
       fecharFormularioDoMural
     );
+
+
 
     const uploadFoto =
       document.getElementById("uploadFoto");
@@ -1405,6 +1590,15 @@
           window.innerWidth <= 850
         ) {
           abrirFormularioDoMural();
+
+          setTimeout(
+            function () {
+              document
+                .getElementById("nome")
+                ?.focus();
+            },
+            180
+          );
         }
       }
     );
@@ -1878,16 +2072,6 @@
       document.body.classList.add(
         "formulario-mobile-aberto"
       );
-
-      setTimeout(
-        function () {
-          const campoNome =
-            document.getElementById("nome");
-
-          campoNome?.focus();
-        },
-        250
-      );
     }
 
     function fecharFormularioDoMural() {
@@ -1902,6 +2086,8 @@
       document.body.classList.remove(
         "formulario-mobile-aberto"
       );
+
+      abrirFormularioMobile.focus();
     }
 
     function abrirModalFoto(
