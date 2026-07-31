@@ -787,13 +787,18 @@
         left: 10px;
         right: 10px;
         bottom: 10px;
-        z-index: 1001;
-        max-height: calc(100vh - 90px);
+        z-index: 10001;
+        top: 74px;
+        max-height: calc(100vh - 84px);
         overflow-y: auto;
         border-radius: 22px;
         transform: translateY(calc(100% + 30px));
         opacity: 0;
         pointer-events: none;
+        isolation: isolate;
+        touch-action: pan-y;
+        -webkit-overflow-scrolling: touch;
+
         transition: transform 0.28s ease, opacity 0.28s ease;
       }
 
@@ -806,7 +811,7 @@
       .fundo-formulario-mobile {
         position: fixed;
         inset: 0;
-        z-index: 1000;
+        z-index: 9999;
         display: block;
         background: rgba(45, 17, 31, 0.54);
         opacity: 0;
@@ -862,6 +867,19 @@
       .grade {
         grid-template-columns: 1fr;
         padding-bottom: 90px;
+      }
+
+      .formulario input,
+      .formulario textarea,
+      .formulario button,
+      .formulario label {
+        position: relative;
+        z-index: 2;
+        pointer-events: auto;
+      }
+
+      .formulario textarea {
+        min-height: 120px;
       }
 
       body.formulario-mobile-aberto {
@@ -1313,7 +1331,9 @@
 
     abrirFormularioMobile.addEventListener(
       "click",
-      abrirFormularioDoMural
+      function () {
+        campoFoto.click();
+      }
     );
 
     fecharFormularioMobile.addEventListener(
@@ -1380,6 +1400,12 @@
           "Pré-visualização da foto";
 
         preview.appendChild(imagem);
+
+        if (
+          window.innerWidth <= 850
+        ) {
+          abrirFormularioDoMural();
+        }
       }
     );
 
@@ -1855,9 +1881,12 @@
 
       setTimeout(
         function () {
-          campoFoto.click();
+          const campoNome =
+            document.getElementById("nome");
+
+          campoNome?.focus();
         },
-        180
+        250
       );
     }
 
